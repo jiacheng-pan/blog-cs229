@@ -18,11 +18,11 @@
     <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.css">
     <title>
         
-        Note of Machine Learning
+        二分类问题｜Note of Machine Learning
         
     </title>
 
-    <link rel="canonical" href="http://jackieanxis.github.io/cs229/categories/线性回归/">
+    <link rel="canonical" href="http://jackieanxis.github.io/cs229/2018/06/05/二分类问题/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/cs229/css/bootstrap.min.css">
@@ -43,7 +43,7 @@
 <!-- hack iOS CSS :active style -->
 <body ontouchstart="" class="animated fadeIn">
 <!-- hexo-inject:begin --><!-- hexo-inject:end --><!-- Navigation -->
-<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "false" data-istags="false
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top " id="nav-top" data-ispost = "true" data-istags="false
 " data-ishome = "false" >
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -132,135 +132,156 @@
 </script>
 
 <!-- Main Content -->
+
+<!--only post-->
+
+
+<img class="wechat-title-img"
+     src="http://o6vut8vrh.bkt.clouddn.com/background.png">
+
+
 <style>
-    .intro-header .site-heading {
-        margin: 50px;
-    }
     
     header.intro-header {
         background-image: url('http://o6vut8vrh.bkt.clouddn.com/background.png')
     }
+
     
 </style>
 
-<!-- Page Header -->
 <header class="intro-header">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading text-center">
-                    <h1>archives</h1>
-                    <span class="subheading">可以根据归档日期检索所有文件</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 text-center">
+                <div class="post-heading">
+                    <h1>二分类问题</h1>
+                    
+                    <span class="meta">
+                         作者 Jackie Anxis
+                        <span>
+                          日期 2018-06-05
+                         </span>
+                    </span>
+                    <div class="tags text-center">
+                        
+                        <a class="tag" href="/cs229/tags/#分类"
+                           title="分类">分类</a>
+                        
+                        <a class="tag" href="/cs229/tags/#二分类"
+                           title="二分类">二分类</a>
+                        
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="post-title-haojen">
+        <span>
+            二分类问题
+        </span>
+    </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-            <!-- archive list -->
-            
-				
-				
-				
-					
-					
-					<div class="archive archive-year" data-date="2018">
-						<h2 class="archive-title">
-						<span class="fa fa-archive">
-							<a href="/cs229/archives/2018">2018</a>
-						</span>
-						</h2>
-				
-				
-					
-					
-					<div class="archive archive-month" data-date="201806">
-						<h3 class="archive-title">
-							<a href="/cs229/archives/2018/06">06</a>
-						</h3>
-				
-				<div class="one-tag-list">
-                <div class="post-preview">
-                    <a href="/cs229/2018/06/05/二分类问题/">
-                        <h4 class="post-title">
-                            二分类问题
-                        </h4>
-                        
-                    </a>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <!-- Post Container -->
+            <div class="col-lg-8 col-lg-offset-1 col-sm-9 post-container">
+                <p>在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：</p>
+<p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/41455819.jpg" alt=""></p>
+<p>一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：<br>$$<br>h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}<br>$$<br>logistic函数$g(z)=1/(1+e^{-z})$的形状如下：</p>
+<p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/53166407.jpg" alt=""></p>
+<p>可以定义<br>$$<br>\begin{align}<br>P(y=1|x;\theta)&amp; =h\theta (x) \\<br>P(y=0|x;\theta)&amp; =1-h\theta(x)<br>\end{align}<br>$$<br>于是：<br>$$<br>P(y|x;\theta)=h_\theta(x)^y(1-h_\theta(x))^{(1-y)}<br>$$<br>进行极大似然估计：<br>$$<br>L(\theta)=P(y|x;\theta)=\prod_{i=1}^mP(y^{(i)}|x^{(i)};\theta)=\prod_{i=1}^mh_\theta(x^{(i)})^{y^{(i)}}(1-h_\theta(x^{(i)}))^{(1-y^{(i)})}<br>$$<br>为了计算方便，定义<br>$$<br>\begin{align}<br>l(\theta)&amp;=log(L(\theta))\\<br>&amp;=\sum_{i=1}^mlog(P(y^{(i)}|x^{(i)};\theta))\\<br>&amp;=\sum_{i=1}^m(y^{(i)}\cdot log(h_\theta(x^{(i)}))+(1-y^{(i)})\cdot log(1-h_\theta(x^{(i)})))<br>\end{align}<br>$$<br>利用梯度上升进行求解：<br>$$<br>\theta := \theta + \alpha \nabla_\theta l(\theta)<br>$$<br>其中<br>$$<br>\nabla_{\theta_j} l(\theta)=\frac{\partial}{\partial\theta_j}l(\theta)=\sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}\\<br>\theta_j:=\theta_j+\alpha \cdot \sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}<br>$$<br>最终的梯度上升结果几乎与线性拟合中的梯度下降结果一样。</p>
+
+                <hr>
+                
+
+                <ul class="pager">
+                    
+                    
+                    <li class="next">
+                        <a href="/cs229/2018/06/05/线性模型的概率解释/" data-toggle="tooltip" data-placement="top"
+                           title="线性模型的概率解释">Next Post &rarr;</a>
+                    </li>
+                    
+                </ul>
+
+                
+
+                
+
+
+                <!--加入新的评论系统-->
+                
+                <!-- 来必力City版安装代码 -->
+                <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTk2MC82NTI1">
+                    <script type="text/javascript">
+                        (function(d, s) {
+                            var j, e = d.getElementsByTagName(s)[0];
+
+                            if (typeof LivereTower === 'function') { return; }
+
+                            j = d.createElement(s);
+                            j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+                            j.async = true;
+
+                            e.parentNode.insertBefore(j, e);
+                        })(document, 'script');
+                    </script>
+                    <noscript> 为正常使用来必力评论功能请激活JavaScript</noscript>
                 </div>
-				<hr>
-				</div>
-            
-				
-				
-				
-				
-				<div class="one-tag-list">
-                <div class="post-preview">
-                    <a href="/cs229/2018/06/05/线性模型的概率解释/">
-                        <h4 class="post-title">
-                            线性模型的概率解释
-                        </h4>
-                        
-                    </a>
+                <!-- City版安装代码已完成 -->
+                
+            </div>
+
+            <div class="hidden-xs col-sm-3 toc-col">
+                <div class="toc-wrap">
+                    
                 </div>
-				<hr>
-				</div>
-            
-				
-				
-				
-				
-				<div class="one-tag-list">
-                <div class="post-preview">
-                    <a href="/cs229/2018/06/04/过拟合&局部加权回归/">
-                        <h4 class="post-title">
-                            过拟合&局部加权回归
-                        </h4>
-                        
-                    </a>
-                </div>
-				<hr>
-				</div>
-            
-				
-				
-				
-				
-				<div class="one-tag-list">
-                <div class="post-preview">
-                    <a href="/cs229/2018/06/03/线性回归&最小二乘拟合/">
-                        <h4 class="post-title">
-                            线性回归
-                        </h4>
-                        
-                    </a>
-                </div>
-				<hr>
-				</div>
-            
-				
-				
-				
-				
-				<div class="one-tag-list">
-                <div class="post-preview">
-                    <a href="/cs229/2018/06/03/梯度下降法/">
-                        <h4 class="post-title">
-                            监督学习&梯度下降法
-                        </h4>
-                        
-                    </a>
-                </div>
-				<hr>
-				</div>
-            
+            </div>
         </div>
+
+        <div class="row">
+            <!-- Sidebar Container -->
+
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5 class="text-center">
+                        <a href="/cs229/tags/">FEATURED TAGS</a>
+                    </h5>
+                    <div class="tags">
+                        
+                        <a class="tag" href="/cs229/tags/#分类"
+                           title="分类">分类</a>
+                        
+                        <a class="tag" href="/cs229/tags/#二分类"
+                           title="二分类">二分类</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
+
     </div>
+</article>
+
+
+
+
+
+
 
 <!-- Footer -->
 <!-- Footer -->
