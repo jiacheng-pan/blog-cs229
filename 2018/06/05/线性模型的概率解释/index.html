@@ -196,6 +196,8 @@
 <li>很多独立分布的变量之间相互叠加后会趋向于正态分布（中心极限定理），在大多数情况下能成立</li>
 </ol>
 <p>所以，$y^{(i)}$的后验分布：<br>$$<br>P(y^{(i)}|x^{(i)};\theta)=\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2}) \sim N(\theta^Tx^{(i)}, \sigma^2)<br>$$</p>
+<p>之后，进行极大似然估计（maximum likelihood estimation）：$max L(\theta)$，即选择合适的$\theta$，使得$y^{(i)}$对于$x^{(i)}$出现的概率最高（有一些存在即合理的感觉）</p>
+<p>那么，我们定义：<br>$$<br>l(\theta) = log(L(\theta))=\sum_{i=1}^mlog(P(y^{(i)}|x^{(i)};\theta))=m\cdot log(\frac{1}{\sqrt{2\pi}\sigma})-\sum_{i=1}^m\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2}<br>$$<br>于是，极大似然估计变为最小化：<br>$$<br>\sum_{i=1}^m\frac{(y{(i)}-\theta^Tx{(i)})2}{2\sigma2}<br>$$<br>也即之前线性回归所需进行最小二乘拟合的$J(\theta)$。</p>
 
                 <hr>
                 
@@ -413,7 +415,22 @@
 <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 
 <!--wechat title img-->
-<img class="wechat-title-img" src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/5291116.jpg"><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<img class="wechat-title-img" src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/5291116.jpg">
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
