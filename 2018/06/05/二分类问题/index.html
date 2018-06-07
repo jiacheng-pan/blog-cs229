@@ -1,182 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="The Note of Andrew Ng&#39;s Course, Machine Learning(cs229)">
-    <meta name="keyword"  content="null">
-    <link rel="shortcut icon" href="/cs229/img/favicon.ico">
-
-    <title>
-        
-        二分类问题 - Note of Machine Learning
-        
-    </title>
-
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="/cs229/css/aircloud.css">
-    <link rel="stylesheet" href="/cs229/css/gitment.css">
-    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
-    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
-    <!-- ga & ba script hoook -->
-    <script></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>二分类问题 | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函数">
+<meta name="keywords" content="分类,二分类">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二分类问题">
+<meta property="og:url" content="http://jackieanxis.github.io/2018/06/05/二分类问题/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函数">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-5/41455819.jpg">
+<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-5/53166407.jpg">
+<meta property="og:updated_time" content="2018-06-07T09:20:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="二分类问题">
+<meta name="twitter:description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函数">
+<meta name="twitter:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-5/41455819.jpg">
+  
+  
+    <link rel="icon" href="http://o6vut8vrh.bkt.clouddn.com/avatar.png">
+  
+  <link rel="stylesheet" href="/cs229/css/typing.css">
+  <link rel="stylesheet" href="/cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
 </head>
 
-<body>
-
-<!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="site-nav-toggle" id="site-nav-toggle">
-    <button>
-        <span class="btn-bar"></span>
-        <span class="btn-bar"></span>
-        <span class="btn-bar"></span>
-    </button>
-</div>
-
-<div class="index-about">
-    <i> The Note of Andrew Ng&#39;s Course, Machine Learning(cs229) </i>
-</div>
-
-<div class="index-container">
+  
     
-    <div class="index-left">
-        
-<div class="nav" id="nav">
-    <div class="avatar-name">
-        <div class="avatar">
-            <img src="/cs229/avatar.jpeg" />
-        </div>
-        <div class="name">
-            <i>Jackie Anxis</i>
-        </div>
-    </div>
-    <div class="contents" id="nav-content">
-        <ul>
-            <li >
-                <a href="/">
-                    <i class="iconfont icon-shouye1"></i>
-                    <span>主页</span>
-                </a>
-            </li>
-            <li >
-                <a href="/cs229/tags">
-                    <i class="iconfont icon-biaoqian1"></i>
-                    <span>标签</span>
-                </a>
-            </li>
-            <li >
-                <a href="/cs229/archives">
-                    <i class="iconfont icon-guidang2"></i>
-                    <span>存档</span>
-                </a>
-            </li>
-            <li >
-                <a href="/cs229/about/">
-                    <i class="iconfont icon-guanyu2"></i>
-                    <span>关于</span>
-                </a>
-            </li>
-            
-            <li>
-                <a id="search">
-                    <i class="iconfont icon-sousuo1"></i>
-                    <span>搜索</span>
-                </a>
-            </li>
-            
-        </ul>
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-二分类问题" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jackie Anxis</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
     </div>
     
-        <div id="toc" class="toc-article">
+        <nav id="main-nav" class="main-nav nav-left">
     
-</div>
     
-</div>
-
-
-<div class="search-field" id="search-field">
-    <div class="search-container">
-        <div class="search-input">
-            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
-            <input id="search-input"/>
-            <span id="begin-search">搜索</span>
-        </div>
-        <div class="search-result-container" id="search-result-container">
-
-        </div>
-    </div>
-</div>
-        <div class="index-about-mobile">
-            <i> The Note of Andrew Ng&#39;s Course, Machine Learning(cs229) </i>
-        </div>
-    </div>
+      <a class="main-nav-link" href="http://jackieanxis.github.io">Home</a>
     
-    <div class="index-middle">
-        <!-- Main Content -->
-        
+      <a class="main-nav-link" href="http://jackieanxis.github.io/cs229">MLcs229</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/papers">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/others">Others</a>
+    
+      <a class="main-nav-link" href="/cs229/about">About</a>
+    
+  </nav>
+</header>
 
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      二分类问题
+    </h1>
+  
 
-<div class="post-container">
-    <div class="post-title">
-        二分类问题
-    </div>
-
-    <div class="post-meta">
-        <span class="attr">发布于：<span>2018-06-05 11:02:00</span></span>
-        
-        <span class="attr">标签：/
-        
-        <a class="tag" href="/cs229/tags/#分类" title="分类">分类</a>
-        <span>/</span>
-        
-        <a class="tag" href="/cs229/tags/#二分类" title="二分类">二分类</a>
-        <span>/</span>
-        
-        
-        </span>
-        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
-</span>
-</span>
-    </div>
-    <div class="post-content ">
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
         <p>在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：</p>
 <p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/41455819.jpg" alt=""></p>
 <p>一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：<br>$$<br>h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}<br>$$<br>logistic函数$g(z)=1/(1+e^{-z})$的形状如下：<br><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/53166407.jpg" alt=""><br>可以定义<br>$$<br>\begin{align}<br>P(y=1|x;\theta)&amp; =h\theta (x) \\<br>P(y=0|x;\theta)&amp; =1-h\theta(x)<br>\end{align}<br>$$<br>于是：<br>$$<br>P(y|x;\theta)=h_\theta(x)^y(1-h_\theta(x))^{(1-y)}<br>$$<br>进行极大似然估计：<br>$$<br>L(\theta)=P(y|x;\theta)=\prod_{i=1}^mP(y^{(i)}|x^{(i)};\theta)=\prod_{i=1}^mh_\theta(x^{(i)})^{y^{(i)}}(1-h_\theta(x^{(i)}))^{(1-y^{(i)})}<br>$$<br>为了计算方便，定义<br>$$<br>\begin{align}<br>l(\theta)&amp;=log(L(\theta))\\<br>&amp;=\sum_{i=1}^mlog(P(y^{(i)}|x^{(i)};\theta))\\<br>&amp;=\sum_{i=1}^m(y^{(i)}\cdot log(h_\theta(x^{(i)}))+(1-y^{(i)})\cdot log(1-h_\theta(x^{(i)})))<br>\end{align}<br>$$<br>利用梯度上升进行求解：<br>$$<br>\theta := \theta + \alpha \nabla_\theta l(\theta)<br>$$<br>其中<br>$$<br>\nabla_{\theta_j} l(\theta)=\frac{\partial}{\partial\theta_j}l(\theta)=\sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}\\<br>\theta_j:=\theta_j+\alpha \cdot \sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}<br>$$<br>最终的梯度上升结果几乎与线性拟合中的梯度下降结果一样。</p>
 
-        
-        <div id="comment-container">
-        </div>
+      
     </div>
-</div>
-    </div>
-</div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/cs229/2018/06/05/二分类问题/" class="article-date">
+  <time datetime="2018-06-05T03:02:00.000Z" itemprop="datePublished">2018-06-05</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Category:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/cs229/categories/分类/">分类</a>
+  </div>
 
 
-<footer class="footer">
-    <ul class="list-inline text-center">
+          </li>
         
         
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/cs229/tags/二分类/">二分类</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/cs229/tags/分类/">分类</a></li></ul>
 
+
+          </li>
         
-
-        
-
-        
-
-        
-
-    </ul>
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
     
-    <p>
-        <span id="busuanzi_container_site_pv">
-            <span id="busuanzi_value_site_pv"></span>PV
-        </span>
-        <span id="busuanzi_container_site_uv">
-            <span id="busuanzi_value_site_uv"></span>UV
-        </span>
-        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
-</footer><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<nav id="article-nav" class="article-nav">
+  
+    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
+  
+  
+    <a href="/cs229/2018/06/05/线性模型的概率解释/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">线性模型的概率解释</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/cs229/fancybox/jquery.fancybox.css">
+  <script src="/cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -194,20 +195,5 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-
-
-
-
-</body>
-
-<script>
-    // We expose some of the variables needed by the front end
-    window.hexo_search_path = "search.json"
-    window.hexo_root = "/cs229/"
-    window.isPost = true
-</script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-<script src="/cs229/js/index.js"></script>
-<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-
+  </body>
 </html>
