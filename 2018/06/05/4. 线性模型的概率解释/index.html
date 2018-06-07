@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>4. 线性模型的概率解释 | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="关于：为何在进行线性回归时，选择用最小二乘拟合（距离的平方和）来进行，而不是选用其他的模型（比如三次方或四次方）？ 我们更新一下假设函数，使之变为：$$y^{(i)} = \theta^Tx^{(i)} + \varepsilon^{(i)}$$其中，$\varepsilon^{(i)}$是误差项，表示未捕获的特征（unmodeled effects），比如房子存在壁炉也影响价格，或者其他的一些随">
+<meta name="keywords" content="线性回归">
+<meta property="og:type" content="article">
+<meta property="og:title" content="4. 线性模型的概率解释">
+<meta property="og:url" content="http://jackieanxis.github.io/2018/06/05/4. 线性模型的概率解释/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="关于：为何在进行线性回归时，选择用最小二乘拟合（距离的平方和）来进行，而不是选用其他的模型（比如三次方或四次方）？ 我们更新一下假设函数，使之变为：$$y^{(i)} = \theta^Tx^{(i)} + \varepsilon^{(i)}$$其中，$\varepsilon^{(i)}$是误差项，表示未捕获的特征（unmodeled effects），比如房子存在壁炉也影响价格，或者其他的一些随">
+<meta property="og:locale" content="Chinese">
+<meta property="og:updated_time" content="2018-06-07T12:39:42.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="4. 线性模型的概率解释">
+<meta name="twitter:description" content="关于：为何在进行线性回归时，选择用最小二乘拟合（距离的平方和）来进行，而不是选用其他的模型（比如三次方或四次方）？ 我们更新一下假设函数，使之变为：$$y^{(i)} = \theta^Tx^{(i)} + \varepsilon^{(i)}$$其中，$\varepsilon^{(i)}$是误差项，表示未捕获的特征（unmodeled effects），比如房子存在壁炉也影响价格，或者其他的一些随">
+  
+  
+    <link rel="icon" href="http://o6vut8vrh.bkt.clouddn.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-4. 线性模型的概率解释" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jackie Anxis</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io">Home</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-frontend">FrontEnd</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-cs229">MLcs229</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-papers">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-others">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      4. 线性模型的概率解释
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>关于：为何在进行线性回归时，选择用最小二乘拟合（距离的平方和）来进行，而不是选用其他的模型（比如三次方或四次方）？</p>
+<p>我们更新一下假设函数，使之变为：<br>$$<br>y^{(i)} = \theta^Tx^{(i)} + \varepsilon^{(i)}<br>$$<br>其中，$\varepsilon^{(i)}$是误差项，表示未捕获的特征（unmodeled effects），比如房子存在壁炉也影响价格，或者其他的一些随机噪音（random noise）。</p>
+<p>一般，会假设误差项$\varepsilon^{(i)} \sim N(0, \sigma^2)$（满足正态分布），也就是：<br>$$<br>P(\varepsilon^{(i)})=\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(\varepsilon^{(i)})^2}{2\sigma^2})<br>$$<br>关于为什么假设正态分布的解释：</p>
+<ol>
+<li>便于数学运算；</li>
+<li>很多独立分布的变量之间相互叠加后会趋向于正态分布（中心极限定理），在大多数情况下能成立</li>
+</ol>
+<p>所以，$y^{(i)}$的后验分布：<br>$$<br>P(y^{(i)}|x^{(i)};\theta)=\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2}) \sim N(\theta^Tx^{(i)}, \sigma^2)<br>$$</p>
+<p>之后，进行极大似然估计（maximum likelihood estimation）：$max L(\theta)$，即选择合适的$\theta$，使得$y^{(i)}$对于$x^{(i)}$出现的概率最高（有一些存在即合理的感觉），其中$L(\theta)$的定义如下：<br>$$<br>L(\theta)=P(y|x;\theta)=\prod_{i=1}^mP(y^{(i)}|x^{(i)};\theta)=\prod_{i=1}^m\frac{1}{\sqrt{2\pi}\sigma}exp(-\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2})<br>$$<br>那么，为了计算方便，我们定义：<br>$$<br>l(\theta) = log(L(\theta))=\sum_{i=1}^mlog(P(y^{(i)}|x^{(i)};\theta))=m\cdot log(\frac{1}{\sqrt{2\pi}\sigma})-\sum_{i=1}^m\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2}<br>$$<br>于是，极大似然估计变为最小化：<br>$$<br>\sum_{i=1}^m\frac{(y{(i)}-\theta^Tx{(i)})2}{2\sigma2}<br>$$<br>也即之前线性回归所需进行最小二乘拟合的$J(\theta)$。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2018/06/05/4. 线性模型的概率解释/" class="article-date">
+  <time datetime="2018-06-05T03:02:00.000Z" itemprop="datePublished">2018-06-05</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Categorie:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/blog-cs229/categories/线性回归/">线性回归</a>
+  </div>
+
+
+          </li>
+        
+        
+          <li>
+            <span class="label">Label:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/线性回归/">线性回归</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/blog-cs229/2018/06/07/6. 牛顿法/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Nieuwer</strong>
+      <div class="article-nav-title">
+        
+          6. 牛顿法
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog-cs229/2018/06/05/5. 二分类问题/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">5. 二分类问题</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
