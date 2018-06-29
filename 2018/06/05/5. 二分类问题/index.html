@@ -5,20 +5,20 @@
   
   <title>5. 二分类问题 | Machine Learning | cs229</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函数">
+  <meta name="description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmoid函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函">
 <meta name="keywords" content="分类,二分类">
 <meta property="og:type" content="article">
 <meta property="og:title" content="5. 二分类问题">
 <meta property="og:url" content="http://jackieanxis.github.io/2018/06/05/5. 二分类问题/index.html">
 <meta property="og:site_name" content="Machine Learning | cs229">
-<meta property="og:description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函数">
+<meta property="og:description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmoid函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函">
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-5/41455819.jpg">
 <meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-5/53166407.jpg">
-<meta property="og:updated_time" content="2018-06-11T01:28:40.000Z">
+<meta property="og:updated_time" content="2018-06-29T05:31:41.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="5. 二分类问题">
-<meta name="twitter:description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函数">
+<meta name="twitter:description" content="在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：  一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmoid函数』）：$$h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}$$logistic函">
 <meta name="twitter:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-5/41455819.jpg">
   
   
@@ -82,7 +82,7 @@
       
         <p>在二分类问题中，输出$y\in {0, 1}$。同样的，我们也可以用线性拟合来尝试解决二分类问题（如下图左），但数据点比较异常时，容易出现下图右这样的情况：</p>
 <p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/41455819.jpg" alt=""></p>
-<p>一般，在二分类问题中，我们会选用『logistic函数』来拟合（因为形状像S，又称为『sigmod函数』）：<br>$$<br>h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}<br>$$<br>logistic函数$g(z)=1/(1+e^{-z})$的形状如下：<br><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/53166407.jpg" alt=""><br>可以定义<br>$$<br>\begin{align}<br>P(y=1|x;\theta)&amp; =h\theta (x) \\<br>P(y=0|x;\theta)&amp; =1-h\theta(x)<br>\end{align}<br>$$<br>于是：<br>$$<br>P(y|x;\theta)=h_\theta(x)^y(1-h_\theta(x))^{(1-y)}<br>$$<br>进行极大似然估计：<br>$$<br>L(\theta)=P(y|x;\theta)=\prod_{i=1}^mP(y^{(i)}|x^{(i)};\theta)=\prod_{i=1}^mh_\theta(x^{(i)})^{y^{(i)}}(1-h_\theta(x^{(i)}))^{(1-y^{(i)})}<br>$$<br>为了计算方便，定义<br>$$<br>\begin{align}<br>l(\theta)&amp;=log(L(\theta))\\<br>&amp;=\sum_{i=1}^mlog(P(y^{(i)}|x^{(i)};\theta))\\<br>&amp;=\sum_{i=1}^m(y^{(i)}\cdot log(h_\theta(x^{(i)}))+(1-y^{(i)})\cdot log(1-h_\theta(x^{(i)})))<br>\end{align}<br>$$<br>利用梯度上升进行求解：<br>$$<br>\theta := \theta + \alpha \nabla_\theta l(\theta)<br>$$<br>其中<br>$$<br>\nabla_{\theta_j} l(\theta)=\frac{\partial}{\partial\theta_j}l(\theta)=\sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}\\<br>\theta_j:=\theta_j+\alpha \cdot \sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}<br>$$<br>最终的梯度上升结果几乎与线性拟合中的梯度下降结果一样。</p>
+<p>一般，在二分类问题中，我们会选用『<em>logistic</em>函数』来拟合（因为形状像<em>S</em>，又称为『<em>sigmoid</em>函数』）：<br>$$<br>h_\theta (x)=g(\theta^Tx)=\frac{1}{1+e^{-\theta^Tx}}<br>$$<br><em>logistic</em>函数$g(z)=1/(1+e^{-z})​$的形状如下：<br><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-5/53166407.jpg" alt=""><br>可以定义<br>$$<br>\begin{align}<br>P(y=1|x;\theta)&amp; =h_\theta (x) \\<br>P(y=0|x;\theta)&amp; =1-h_\theta(x)<br>\end{align}<br>$$<br>于是：<br>$$<br>P(y|x;\theta)=h_\theta(x)^y(1-h_\theta(x))^{(1-y)}<br>$$<br>进行极大似然估计：<br>$$<br>L(\theta)=P(y|x;\theta)=\prod_{i=1}^mP(y^{(i)}|x^{(i)};\theta)=\prod_{i=1}^mh_\theta(x^{(i)})^{y^{(i)}}(1-h_\theta(x^{(i)}))^{(1-y^{(i)})}<br>$$<br>为了计算方便，定义<br>$$<br>\begin{align}<br>l(\theta)&amp;=log(L(\theta))\\<br>&amp;=\sum_{i=1}^mlog(P(y^{(i)}|x^{(i)};\theta))\\<br>&amp;=\sum_{i=1}^m(y^{(i)}\cdot log(h_\theta(x^{(i)}))+(1-y^{(i)})\cdot log(1-h_\theta(x^{(i)})))<br>\end{align}<br>$$<br>利用梯度上升进行求解：<br>$$<br>\theta := \theta + \alpha \nabla_\theta l(\theta)<br>$$<br>其中<br>$$<br>\nabla_{\theta_j} l(\theta)=\frac{\partial}{\partial\theta_j}l(\theta)=\sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}\\<br>\theta_j:=\theta_j+\alpha \cdot \sum_{i=1}^m(y^{(i)}-h_\theta(x^{(i)}))\cdot x_j^{(i)}<br>$$<br>最终的梯度上升结果几乎与线性拟合中的梯度下降结果一样。</p>
 
       
     </div>

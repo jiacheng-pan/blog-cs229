@@ -13,7 +13,7 @@
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="广义线性模型，英文名为Generalized Linear Model，简称GLM。 之前，涉及到两种的两种模型：  线性拟合模型，假设了$P(y|x;\theta)$是高斯分布 二分类问题，假设了$P(y|x;\theta)$满足伯努利分布  但以上两者知识一种更广泛的，被称为『指数分布族』（The Exponential Family）的特例。 指数分布族$$P(y;\eta)=b(y)exp">
 <meta property="og:locale" content="Chinese">
-<meta property="og:updated_time" content="2018-06-11T05:21:29.000Z">
+<meta property="og:updated_time" content="2018-06-29T06:03:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="7. 广义线性模型">
 <meta name="twitter:description" content="广义线性模型，英文名为Generalized Linear Model，简称GLM。 之前，涉及到两种的两种模型：  线性拟合模型，假设了$P(y|x;\theta)$是高斯分布 二分类问题，假设了$P(y|x;\theta)$满足伯努利分布  但以上两者知识一种更广泛的，被称为『指数分布族』（The Exponential Family）的特例。 指数分布族$$P(y;\eta)=b(y)exp">
@@ -88,17 +88,19 @@
 <p>可以被表示为以上形式的分布，都是指数分布族的某个特定分布，给定$a, b, T$，就可以定义一个概率分布的集合，以$\eta$为参数，就可以得到不同的概率分布。</p>
 <p>在广义线性模型中，会假设$\eta=\theta^Tx$，也就是$\eta$和特征$x$线性相关。</p>
 <h2 id="伯努利分布"><a href="#伯努利分布" class="headerlink" title="伯努利分布"></a>伯努利分布</h2><p>首先，我们给出$y=1$的概率：<br>$$<br>P(y=1;\phi)=\phi<br>$$<br>于是：<br>$$<br>\begin{align}<br>P(y;\phi)<br>    &amp;= \phi^y(1-\phi)^T\\<br>    &amp;= exp(log(\phi^T(1-\phi^T)))\\<br>    &amp;= exp(ylog(\phi)+(1-y)log(1-\phi))\\<br>    &amp;= exp(log\frac{\phi}{1-\phi} \cdot y + log(1-\phi))<br>\end{align}<br>$$<br>比较我们上面的概率形式和指数分布族的标准形式，可以得到：<br>$$<br>\begin{cases}<br>\eta &amp;= log\frac{\phi}{1-\phi}, \text{于是} \phi=\frac{1}{1+e^{-\eta}}\\<br>a(\eta) &amp;= -log(1-\phi)=log(1+e^\eta)\\<br>T(y) &amp;= y\\<br>b(y) &amp;= 1<br>\end{cases}<br>$$</p>
+<p>这里的$\phi$一般会被称为正则响应函数（<em>canonic response function</em>）：<br>$$<br>g(\eta) = E[y|\eta]=\frac{1}{1+e^{-\eta}}<br>$$<br>相对的，正则关联函数（<em>canonic link function</em>）则是$g^{-1}$。</p>
 <h2 id="高斯分布"><a href="#高斯分布" class="headerlink" title="高斯分布"></a>高斯分布</h2><p>$$<br>N(\mu,\sigma^2)=\frac{1}{\sqrt{2\pi}}exp(-\frac{1}{2}(y-\mu)^2)<br>$$</p>
 <p>这里，出于简洁考虑，假设$\sigma=1$，经过一系列化简后，可以表示成：<br>$$<br>\frac{1}{\sqrt{2\pi}} \cdot exp(-\frac{1}{2}y^2) \cdot exp(\mu y-\frac{1}{2}\mu^2)<br>$$<br>那么，<br>$$<br>\begin{cases}<br>\eta &amp;= \mu\\<br>a(\eta) &amp;= \frac{1}{2}\mu^2=\frac{1}{2}\eta^2\\<br>T(y) &amp;= y\\<br>b(y) &amp;= \frac{1}{\sqrt{2\pi}} \cdot exp(-\frac{1}{2}y^2)<br>\end{cases}<br>$$</p>
-<h2 id="多项式分布"><a href="#多项式分布" class="headerlink" title="多项式分布"></a>多项式分布</h2><h4 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h4><p>在二项分布中，$y\in(1, 2)​$</p>
-<p>而多项式分布，$y \in (1,\cdots, k)$</p>
+<h2 id="多项式分布"><a href="#多项式分布" class="headerlink" title="多项式分布"></a>多项式分布</h2><h4 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h4><p>在二项分布中，$y\in \lbrace 1, 2 \rbrace$</p>
+<p>而多项式分布，$y \in \lbrace 1,\cdots, k \rbrace$</p>
 <p>一般会被用来进行邮件分类或者进行病情分类等等</p>
-<p>我们假设<br>$$<br>P(y=i)=\phi_i<br>$$<br>那么，可以用$k$个参数来建模多项式分布<br>$$<br>P(y)=\prod_{i=1}^k\phi_i^{1(y=i)}<br>$$</p>
-<p>其中，$1(\cdots)$的含义为，检验$\cdots$是否为真命题，若为真命题，则取1，否则取0。</p>
-<p>因为所有概率和为1，所以最后一个参数<br>$$<br>\begin{align}<br>\phi_k &amp;= 1-\sum_{j=1}^{k-1}\phi_j \\<br>1(y=k) &amp;=1-\sum_{j=1}^{k-1}1(y=j)<br>\end{align}<br>$$<br>经过化简，也可以表示成：<br>$$<br>P(y)=exp(\sum_{i=1}^{k-1}(log(\frac{\phi_i}{\phi_k}) \cdot 1(y=i)) + log(\phi_k))<br>$$<br>故而<br>$$<br>\eta = \begin{bmatrix}<br>log(\frac{\phi_1}{\phi_k}) \\<br>\vdots \\<br>log(\frac{\phi_{k-1}}{\phi_k})<br>\end{bmatrix} \in \Bbb R^{k-1}<br>$$<br>$$<br>a(\eta) = -log(\phi_k)<br>$$<br>$$<br>T(y)= \begin{bmatrix}<br>1(y=1) \\<br>\vdots \\<br>1(y=k-1)<br>\end{bmatrix} \in (0, 1)^{k-1}<br>$$<br>$$<br>b(y) = 1<br>$$</p>
+<p>我们假设<br>$$<br>P(y=i)=\phi_i<br>$$<br>也即，邮件属于$i$类的概率是$\phi_i$，是关于特征$x$的一个函数。</p>
+<p>那么，可以用$k$个参数来建模多项式分布<br>$$<br>P(y)=\prod_{i=1}^k\phi_i^{1\lbrace y=i \rbrace}<br>$$</p>
+<p>其中，$1 \lbrace \cdots \rbrace$的含义为，检验$\cdots$是否为真命题，若为真命题，则取1，否则取0。</p>
+<p>因为所有概率和为1，所以最后一个参数<br>$$<br>\begin{align}<br>\phi_k &amp;= 1-\sum_{j=1}^{k-1}\phi_j \\<br>1 \lbrace y=k \rbrace &amp;=1-\sum_{j=1}^{k-1}1 \lbrace y=j \rbrace<br>\end{align}<br>$$<br>经过化简，也可以表示成：<br>$$<br>P(y)=exp[\sum_{i=1}^{k-1}(log(\frac{\phi_i}{\phi_k}) \cdot 1\lbrace y=i \rbrace )] + log(\phi_k)<br>$$<br>故而<br>$$<br>\eta = \begin{bmatrix}<br>log(\frac{\phi_1}{\phi_k}) \\<br>\vdots \\<br>log(\frac{\phi_{k-1}}{\phi_k})<br>\end{bmatrix} \in \Bbb R^{k-1}<br>$$<br>$$<br>a(\eta) = -log(\phi_k)<br>$$<br>$$<br>T(y)= \begin{bmatrix}<br>1 \lbrace y=1 \rbrace \\<br>\vdots \\<br>1 \lbrace y=k-1 \rbrace<br>\end{bmatrix} \in (0, 1)^{k-1}<br>$$<br>$$<br>b(y) = 1<br>$$</p>
 <p>根据$\eta$可得：<br>$$<br>\phi_i = e^{\eta_i} \cdot \phi_k<br>$$<br>又因为：<br>$$<br>\sum_{i=1}^{k}\phi_i=\sum_{i=1}^k\phi_ke^{\eta_i}=1<br>$$<br>故而：<br>$$<br>\phi_k = \frac{1}{\sum_{i=1}^ke^{\eta_i}}=\frac{1}{e^{\eta_k}+\sum_{i=1}^{k-1}e^{\eta_i}} = \frac{1}{1+\sum_{i=1}^{k-1}e^{\eta_i}}<br>$$<br>所以：<br>$$<br>\begin{align}<br>\phi_i &amp;= e^{\eta_i} \cdot \phi_k \\<br>&amp;= \frac{e^{\eta_i}}{1 + \sum_{j=1}^{k-1}e^{\eta_j}} \\<br>&amp;= \frac{e^{\theta_i^Tx_i}}{1 + \sum_{j=1}^{k-1}e^{\theta_j^Tx_j}}<br>\end{align}<br>$$<br>上述函数，被称为『softmax』函数，这个函数的作用经常用于进行归一化。</p>
-<p>经过上述步骤，假设函数可以被写成如下形式：<br>$$<br>h_\theta(x)=<br>\left[<br>\begin{array}{c}<br>1(y=1)  \\<br>\vdots \\<br>1(y=k-1)<br>\end{array} | x;\theta<br>\right]=<br>\begin{bmatrix}<br>\phi_1\\<br>\vdots\\<br>\phi_{k-1}<br>\end{bmatrix}<br>$$</p>
-<h4 id="回归"><a href="#回归" class="headerlink" title="回归"></a>回归</h4><p>在经过上述推导，当我们有一堆训练集（$(x^{(1)}, y^{(1)}), \cdots, (x^{(m)}, y^{(m)})$）用于训练的时候，则可以进行极大似然估计：<br>$$<br>L(\theta) = \prod_{i=1}^mP(y^{(i)} | x^{(i)};\theta) = \prod_{i=1}^m\prod_{j=1}^k\phi_j^{1(y^{(i)}=j)}<br>$$</p>
+<p>经过上述步骤，假设函数可以被写成如下形式：<br>$$<br>h_\theta(x)=<br>\left[<br>\begin{array}{c}<br>1\lbrace y=1 \rbrace  \\<br>\vdots \\<br>1\lbrace y=k-1 \rbrace<br>\end{array} | x;\theta<br>\right]=<br>\begin{bmatrix}<br>\phi_1\\<br>\vdots\\<br>\phi_{k-1}<br>\end{bmatrix}<br>$$</p>
+<h4 id="回归"><a href="#回归" class="headerlink" title="回归"></a>回归</h4><p>在经过上述推导，当我们有一堆训练集（$(x^{(1)}, y^{(1)}), \cdots, (x^{(m)}, y^{(m)})$）用于训练的时候，则可以进行极大似然估计：<br>$$<br>L(\theta) = \prod_{i=1}^mP(y^{(i)} | x^{(i)};\theta) = \prod_{i=1}^m\prod_{j=1}^k\phi_j^{1\lbrace y^{(i)}=j \rbrace }<br>$$</p>
 
       
     </div>
