@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>9. 生成学习算法的例子 | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="例一：高斯判别分析和logistic函数我们来看一个例子，对于一个高斯判别分析问题，根据贝叶斯：$$\begin{align}p(y=1|x) &amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x)} \\&amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x|y=0)p(y=0)+p(x|y=1)p(y=1)}\end{align}$$在这里，我们提出几个假设：  $p(y">
+<meta name="keywords" content="生成学习算法,拉普拉斯平滑">
+<meta property="og:type" content="article">
+<meta property="og:title" content="9. 生成学习算法的例子">
+<meta property="og:url" content="http://jackieanxis.github.io/2018/06/29/9. 生成学习算法的例子/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="例一：高斯判别分析和logistic函数我们来看一个例子，对于一个高斯判别分析问题，根据贝叶斯：$$\begin{align}p(y=1|x) &amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x)} \\&amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x|y=0)p(y=0)+p(x|y=1)p(y=1)}\end{align}$$在这里，我们提出几个假设：  $p(y">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/2018-06-30-084350.png">
+<meta property="og:updated_time" content="2018-06-30T17:08:09.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="9. 生成学习算法的例子">
+<meta name="twitter:description" content="例一：高斯判别分析和logistic函数我们来看一个例子，对于一个高斯判别分析问题，根据贝叶斯：$$\begin{align}p(y=1|x) &amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x)} \\&amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x|y=0)p(y=0)+p(x|y=1)p(y=1)}\end{align}$$在这里，我们提出几个假设：  $p(y">
+<meta name="twitter:image" content="http://o6vut8vrh.bkt.clouddn.com/2018-06-30-084350.png">
+  
+  
+    <link rel="icon" href="http://o6vut8vrh.bkt.clouddn.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-9. 生成学习算法的例子" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jackie Anxis</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io">Home</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-frontend">FrontEnd</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-cs229">MLcs229</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-papers">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-others">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      9. 生成学习算法的例子
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <h2 id="例一：高斯判别分析和logistic函数"><a href="#例一：高斯判别分析和logistic函数" class="headerlink" title="例一：高斯判别分析和logistic函数"></a>例一：高斯判别分析和logistic函数</h2><p>我们来看一个例子，对于一个高斯判别分析问题，根据贝叶斯：<br>$$<br>\begin{align}<br>p(y=1|x) &amp;= \frac{p(x|y=1)p(y=1)}{p(x)} \\<br>&amp;= \frac{p(x|y=1)p(y=1)}{p(x|y=0)p(y=0)+p(x|y=1)p(y=1)}<br>\end{align}<br>$$<br>在这里，我们提出几个假设：</p>
+<ol>
+<li>$p(y)$是均匀分布的，也就是$p(y=1)=p(y=0)$</li>
+<li>$x$的条件概率分布（$p(x|y=0)$和$p(x|y=1)$）满足高斯分布。</li>
+</ol>
+<p>考虑二维的情况：</p>
+<p><img src="http://o6vut8vrh.bkt.clouddn.com/2018-06-30-084350.png" alt="image-20180630164349595"></p>
+<p>蓝色数据表达的是$p(x|y=0)$的分布，红色数据表达的是$p(x|y=1)$的分布，两条蓝色和红色的曲线分别是它们的概率密度曲线。</p>
+<p>而灰色的曲线则表示了$p(y=1|x)$的概率密度曲线。</p>
+<p>假设$p(x|y=0) \sim N(\mu_0, \sigma_0)$，$p(x|y=1) \sim N(\mu_1, \sigma_1)$，而$p(y)$均匀分布那么：<br>$$<br>\begin{align}<br>p(y=1|x) &amp;= \frac{N(\mu_0,\sigma_0)}{N(\mu_0,\sigma_0)+N(\mu_1,\sigma_1)} \\<br>&amp;= \cdots \\<br>&amp;= \frac{1}{1+\frac{\sigma_0}{\sigma_1}exp(2\sigma_1^2(x-\mu_0)^2-2\sigma_0^2(x-\mu_1)^2}<br>\end{align}<br>$$<br>事实上，这条曲线跟我们之前见过的<em>logistic</em>曲线非常像，特别是当我们假设$\sigma_0=\sigma_1$的时候，就是一条<em>logistic</em>曲线。</p>
+<p>我们有如下的推广结论：<br>$$<br>{\begin{cases}<br>p(x|y=1) \sim Exp Family(\eta_1) \\<br>p(x|y=0) \sim Exp Family(\eta_0)<br>\end{cases}} \Rightarrow p(y=1|x)是logistic函数<br>$$<br>但这个命题的逆命题并不成立，故而我们知道，<em>logistic</em>所需要的假设更少（无需假设$x$的条件概率分布），鲁棒性更强。而生成函数因为对数据的分布做出了假设，所以需要的数据量会少于<em>logstic</em>回归，我们需要在两者之间进行权衡。</p>
+<h2 id="例二：垃圾邮件分类"><a href="#例二：垃圾邮件分类" class="headerlink" title="例二：垃圾邮件分类"></a>例二：垃圾邮件分类</h2><p>这里我们会用朴素贝叶斯（Naive Bayes）来解决垃圾邮件分类问题（$y\in \lbrace 0, 1 \rbrace$）。</p>
+<p>首先对邮件进行建模，生成特征向量如下：<br>$$<br>x=<br>\begin{bmatrix}<br>0 \\<br>0 \\<br>0 \\<br>\vdots \\<br>1 \\<br>\vdots<br>\end{bmatrix}<br>\begin{matrix}<br>a \\<br>advark \\<br>ausworth \\<br>\vdots \\<br>buy \\<br>\vdots<br>\end{matrix}<br>$$<br>这是一个类似于词频向量的特征向量，我们有一个50000个词的词典，如果邮件中出现了某个词汇，那么其在向量中对应的位置就会被标记为1，否则为0。</p>
+<p>我们的目标是获取，垃圾邮件和非垃圾邮件的特征分别是怎么样的，也即$p(x|y)$。$x={\lbrace 0, 1 \rbrace}^n, y \in \lbrace 0, 1 \rbrace$，这里我们的词典中词汇数量是50000，所以$n=50000$，特征向量$x$会有$2^{50000}$种可能，需要$2^{50000}-1$个参数。</p>
+<p>我们假设$x_i|y$之间相互独立(虽然假设各个单词的出现概率相互独立不是很合理，但是即便这样，朴素贝叶斯的效果依旧不错)，根据朴素贝叶斯，我们得到：<br>$$<br>p(x_1, x_2, \ldots, x_{50000}|y)=p(x_1|y)p(x_2|y) \cdots p(x_{50000}|y)<br>$$<br>单独观察$p(x_j|y=1)​$：<br>$$<br>p(x_j|y=1) = p(x_j=1|y=1)^{x_j}p(x_j=0|y=1)^{1-x_j}<br>$$<br>给定三个参数：<br>$$<br>\begin{align}<br>\phi_{j|y=1} &amp;= p(x_j=1|y=1) \\<br>\phi_{j|y=0} &amp;= p(x_j=1|y=0) \\<br>\phi_y &amp;= p(y = 1)<br>\end{align}<br>$$<br>故：<br>$$<br>\begin{align}<br>p(x_j|y=1) &amp;= \phi_{j|y=1}^{x_j}(\phi_y - \phi_{j|y=1})^{1-x_j}\\<br>p(x_j|y=0) &amp;= \phi_{j|y=0}^{x_j}(1-\phi_y + \phi_{j|y=0})^{1-x_j} \\<br>p(x_j|y) &amp;= p(x_j|y=1)^yp(x_j|y=0)^{1-y} \\<br>p(y) &amp;= \phi_y^y(1-\phi_y)^{1-y}<br>\end{align}<br>$$<br>按照上个博客<a href="https://jackieanxis.github.io/blog-cs229/2018/06/29/8.%20%E7%94%9F%E6%88%90%E5%AD%A6%E4%B9%A0%E7%AE%97%E6%B3%95%E7%9A%84%E6%A6%82%E5%BF%B5/">8. 生成学习算法的概念</a>中所述，我们会选用联合概率分布的极大似然来导出最优解：<br>$$<br>l(\phi_y,\phi_{j|y=1},\phi_{j|y=0}=\prod_{i=1}^mp(x^{(i)},y^{(i)})=\prod_{i=1}^mp(x^{(i)}|y^{(i)})p(y^{(i)})<br>$$</p>
+<p>可以解得：<br>$$<br>\begin{align}<br>\phi_{j|y=1} &amp;= \frac{\sum_{i=1}^m1\lbrace x_j{(i)}=1, y^{(i)}=1 \rbrace}{\sum_{i=1}^m1\lbrace y^{(i)}=1 \rbrace}  = \frac{统计所有包含词语j的垃圾邮件的数量}{垃圾邮件的总数}\\<br>\phi_{j|y=0} &amp;= \frac{\sum_{i=1}^m1\lbrace x_j{(i)}=1, y^{(i)}=0 \rbrace}{\sum_{i=1}^m1\lbrace y^{(i)}=0 \rbrace} = \frac{统计所有包含词语j的非垃圾邮件的数量}{非垃圾邮件的总数} \\<br>\phi_y &amp;= \frac{\sum_{i=1}^m1\lbrace y^{(i)}=1 \rbrace}{m} = \frac{垃圾邮件的数量}{邮件的总数}<br>\end{align}<br>$$<br>通过以上的公式，我们已经可以完全推得$p(x_1, x_2, \ldots, x_{50000}|y)$。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2018/06/29/9. 生成学习算法的例子/" class="article-date">
+  <time datetime="2018-06-29T13:10:00.000Z" itemprop="datePublished">2018-06-29</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Category:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/blog-cs229/categories/生成学习算法/">生成学习算法</a>
+  </div>
+
+
+          </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/拉普拉斯平滑/">拉普拉斯平滑</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/生成学习算法/">生成学习算法</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
+  
+  
+    <a href="/blog-cs229/2018/06/29/8. 生成学习算法的概念/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">8. 生成学习算法的概念</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
