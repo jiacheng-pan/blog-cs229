@@ -14,7 +14,7 @@
 <meta property="og:description" content="最优间隔分类器（Optimal Margin Classifier）。其目标是使得最小几何间隔最大化（10. SVM（一）概念）：$$\text{目标(1):} \\\max_{w, b} \gamma \\\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1">
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-4/9336603.jpg">
-<meta property="og:updated_time" content="2018-07-03T17:33:22.000Z">
+<meta property="og:updated_time" content="2018-07-03T17:38:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="11. SVM（二）最优间隔分类器">
 <meta name="twitter:description" content="最优间隔分类器（Optimal Margin Classifier）。其目标是使得最小几何间隔最大化（10. SVM（一）概念）：$$\text{目标(1):} \\\max_{w, b} \gamma \\\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1">
@@ -93,11 +93,11 @@
 <li>如果$h_i(w) \neq 0$，那么$\theta_p(w)=+\infty$（因为$\beta$可以取$+\infty/-\infty$）。</li>
 </ol>
 <p>所以，在满足约束的情况下，$\theta_p(w)=f(w)$，因为使得${\cal L}(w, \alpha, \beta)$最大的方法，就是其他所有项全是0。那么，可以得出这样的结论：<br>$$<br>\theta_p(w)=\begin{cases}<br>f(w), &amp;\text{满足约束} \\<br>\infty, &amp;\text{不满足约束}<br>\end{cases}<br>$$<br>因此，在满足条件的情况下，$\min_w\theta_p(w)$等价于$min_wf(w)$。</p>
-<p>我们将最优间隔分类器的目标重新表示一下：<br>$$<br>p^*=\min_{w, b}\max_\alpha {\cal L(w, \alpha, b)} \\<br>{\cal L}(w, \alpha, b) = \frac{1}{2}||w||^2+\sum_i\alpha_i(1-y^{(i)}(w^T x^{(i)}+b))<br>$$<br>其中，直接忽略了$h_i(w)=0$的约束，而$g_i(w,b)=1-y^{(i)}(w^Tx^{(i)}+b) \leq 0, f(w)=\frac{1}{2}||w||^2$</p>
+<p>我们将最优间隔分类器的目标重新表示一下：<br>$$<br>p^\ast =\min_{w, b}\max_\alpha {\cal L(w, \alpha, b)} \\<br>{\cal L}(w, \alpha, b) = \frac{1}{2}||w||^2+\sum_i\alpha_i(1-y^{(i)}(w^T x^{(i)}+b))<br>$$<br>其中，直接忽略了$h_i(w)=0$的约束，而$g_i(w,b)=1-y^{(i)}(w^Tx^{(i)}+b) \leq 0, f(w)=\frac{1}{2}||w||^2$</p>
 <h2 id="对偶问题（Dual-Problem）"><a href="#对偶问题（Dual-Problem）" class="headerlink" title="对偶问题（Dual Problem）"></a>对偶问题（Dual Problem）</h2><p>一般来说，将原始问题转化成对偶问题来求解。一是因为对偶问题往往比较容易求解，二是因为对偶问题引入了核函数，方便推广到非线性分类的情况。</p>
-<p>我们看到，之前的原始问题，是<br>$$<br>p^*=\min_{w, b}\max_\alpha {\cal L(w, \alpha, b)}<br>$$</p>
+<p>我们看到，之前的原始问题，是<br>$$<br>p^\ast =\min_{w, b}\max_\alpha {\cal L}(w, \alpha, b)<br>$$</p>
 <p>那么，定义其对偶问题：</p>
-<p>$$<br>l^*=\max_\alpha\min_{w,b}{\cal L}(w, \alpha, b)<br>$$</p>
+<p>$$<br>l^\ast =\max_\alpha\min_{w,b}{\cal L}(w, \alpha, b)<br>$$</p>
 <p>接下去，我们求解对偶问题：</p>
 <p>先求解$\min_{w,b}{\cal L}(w, \alpha, b)$：</p>
 <p>分别求偏导，使其等于0，导出最小值：<br>$$<br>\begin{align}<br>&amp; \nabla_w{\cal L}(w, \alpha, b) =w-\sum_{i=1}\alpha_iy^{(i)}x^{(i)}=0 \\<br>&amp; \nabla_b{\cal L}(w, \alpha, b) =\sum_{i=1}\alpha_iy^{(i)}=0<br>\end{align}<br>$$</p>
@@ -106,13 +106,13 @@
 <p>代入${\cal L}(w, \alpha, b)$，就可以得到最小值：</p>
 <p>$$<br>\begin{align}<br>{\cal L}(w, \alpha, b) &amp;= \frac{1}{2}||w||^2+\sum_i\alpha_i(1-y^{(i)}(w^T x^{(i)}+b)) \\<br>\min_{w, b}{\cal L}(w, \alpha, b) &amp;=\underbrace{\sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)}_{W(\alpha)}<br>\end{align}<br>$$</p>
 <p>于是，我们的对偶问题简化到了对$W(\alpha)$最大化：<br>$$<br>\max_\alpha W(\alpha) \\<br>\text{s.t. }\alpha_i \geq 0, \sum_iy_i\alpha_i=0<br>$$</p>
-<p>假设，我们解得的对偶问题的解为：$\alpha^<em>=[\alpha_1^</em>,\alpha_2^<em>, \ldots, \alpha_m^</em>]$，那么最终的解可以表示成：</p>
-<p>$$<br>w^<em>=\sum_{i=1}\alpha_i^</em>y^{(i)}x^{(i)}<br>$$</p>
-<p>还有$b$未得到解决。我们先来观察一下约束项：<br>$$<br>g_i(w,b)=1-y{(i)}(w^Tx^{(i)}+b) \leq 0<br>$$<br><img src="http://o6vut8vrh.bkt.clouddn.com/18-7-4/9336603.jpg" alt=""></p>
+<p>假设，我们解得的对偶问题的解为：$\alpha^\ast =[\alpha_1^\ast ,\alpha_2^\ast , \ldots, \alpha_m^\ast ]$，那么最终的解可以表示成：</p>
+<p>$$<br>w^\ast =\sum_{i=1}\alpha_i^\ast y^{(i)}x^{(i)}<br>$$</p>
+<p>还有$b​$未得到解决。我们先来观察一下约束项：<br>$$<br>g_i(w,b)=1-y{(i)}(w^Tx^{(i)}+b) \leq 0<br>$$<br><img src="http://o6vut8vrh.bkt.clouddn.com/18-7-4/9336603.jpg" alt=""></p>
 <p>我们知道，在数据中，只有少数的几个数据点，他们的函数距离为1（最小），也即$g_i(w,b)=0$，如图所示。</p>
-<p>在整个数据集中，只有这些数据点对约束超平面起了作用，这些数据点被称为支持向量（<em>support vector</em>），其对应的$\alpha_i^<em> \neq 0$，而其他不是支持向量的数据点，没有对约束超平面起作用，其$\alpha_i^</em>=0$。</p>
-<p>此时，我们已经得到了$w^<em>$，而$b^</em>$的计算如下，找到一个数据点，其$\alpha_j^* \neq 0$(也就是支持向量，其函数间隔为1)，我们就能得到：</p>
-<p>$$<br>y^{(j)}(w^{<em>T}x^{(j)}+b^</em>)=1<br>\Rightarrow<br>b^<em>=y^{(j)}-\sum_{i=1}\alpha_i^</em>y^{(i)}(x^{(i)} \cdot x^{(j)})<br>$$</p>
+<p>在整个数据集中，只有这些数据点对约束超平面起了作用，这些数据点被称为支持向量（<em>support vector</em>），其对应的$\alpha_i^\ast  \neq 0$，而其他不是支持向量的数据点，没有对约束超平面起作用，其$\alpha_i^\ast =0$。</p>
+<p>此时，我们已经得到了$w^\ast $，而$b^\ast $的计算如下，找到一个数据点，其$\alpha_j^\ast  \neq 0$(也就是支持向量，其函数间隔为1)，我们就能得到：</p>
+<p>$$<br>y^{(j)}(w^{*T}x^{(j)}+b^\ast )=1<br>\Rightarrow<br>b^\ast =y^{(j)}-\sum_{i=1}\alpha_i^\ast y^{(i)}(x^{(i)} \cdot x^{(j)})<br>$$</p>
 
       
     </div>
@@ -127,7 +127,7 @@
         </li>
         
           <li>
-            <span class="label">Categoría:</span>
+            <span class="label">Category:</span>
             
   <div class="article-category">
     <a class="article-category-link" href="/blog-cs229/categories/SVM/">SVM</a>
@@ -157,7 +157,7 @@
   
   
     <a href="/blog-cs229/2018/07/02/10. SVM（一）概念/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Viejo</strong>
+      <strong class="article-nav-caption">Older</strong>
       <div class="article-nav-title">10. SVM（一）概念</div>
     </a>
   
