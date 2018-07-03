@@ -15,7 +15,7 @@
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-3/83131877.jpg">
 <meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-3/34659777.jpg">
-<meta property="og:updated_time" content="2018-07-03T03:50:46.000Z">
+<meta property="og:updated_time" content="2018-07-03T09:10:44.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="10. SVM（一）概念">
 <meta name="twitter:description" content="SVM，指的是支持向量机（support vector machines）。 支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：  但是很明显，上图中虽然a, c都对数据进行了有效的分割。但很明显，都不如b分割的好。 我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确">
@@ -97,8 +97,8 @@
 <p>最后，超平面与数据集$\lbrace (x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \ldots \rbrace$之间的函数间隔，被定义为所有函数间隔中的最小值：<br>$$<br>\hat{\gamma}=\min_i\hat{\gamma}^{(i)}<br>$$</p>
 <h3 id="几何间隔（geometric-margin）"><a href="#几何间隔（geometric-margin）" class="headerlink" title="几何间隔（geometric margin）"></a>几何间隔（geometric margin）</h3><p><img src="http://o6vut8vrh.bkt.clouddn.com/18-7-3/34659777.jpg" alt=""></p>
 <p>从点$(x^{(i)}, y^{(i)})$出发，对超平面做垂线，得到点D，我们知道他们之间的距离，就是该超平面到数据点$(x^{(i)}, y^{(i)})$的几何间隔。</p>
-<p>经过推导，D的坐标可以表示为：<br>$$<br>x^{(i)}-\gamma^{(i)}\frac{w}{||w||}w^Tx+b<br>$$<br>又因为，D在超平面$w^Tx+b=0$上，所以：<br>$$<br>\begin{align}<br>&amp; w^T(x^{(i)}-\gamma^{(i)}\frac{w}{||w||}w^Tx+b)+b=0 \\<br>&amp; \Rightarrow w^Tx^{(i)}+b=\gamma^{(i)} \cdot \frac{w^Tw}{||w||}=\gamma^{(i)} \cdot ||w|| \\<br>&amp; \Rightarrow \gamma^{(i)}=(\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}<br>\end{align}<br>$$<br>加上正负分类的判断：<br>$$<br>\gamma^{(i)}=y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||})<br>$$<br>当$||w|| = 1$时，函数间隔就等于几何间隔。</p>
-<p>同样的，超平面与数据集$\lbrace (x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \ldots \rbrace$之间的几何间隔，被定义为所有几何间隔中的最小值：<br>$$<br>\gamma=\min_i\gamma^{(i)}<br>$$<br>最后，我们导出<strong>最大间隔分类器</strong>问题：选择$w, b$，最大化$\gamma$，同时满足$y^{(i)}(w^Tx^{(i)}+b) \geq \gamma$。</p>
+<p>经过推导，D的坐标可以表示为：<br>$$<br>x^{(i)}-\gamma^{(i)}\frac{w}{||w||}<br>$$<br>又因为，D在超平面$w^Tx+b=0$上，所以：<br>$$<br>\begin{align}<br>&amp; w^T(x^{(i)}-\gamma^{(i)}\frac{w}{||w||})+b=0 \\<br>&amp; \Rightarrow w^Tx^{(i)}+b=\gamma^{(i)} \cdot \frac{w^Tw}{||w||}=\gamma^{(i)} \cdot ||w|| \\<br>&amp; \Rightarrow \gamma^{(i)}=(\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}<br>\end{align}<br>$$<br>加上正负分类的判断：<br>$$<br>\gamma^{(i)}=y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||})<br>$$<br>我们可以看到，几何间隔跟函数间隔之间存在如下的关系：<br>$$<br>\hat{\gamma}^{(i)} = \frac{\gamma^{(i)}}{||w||}<br>$$</p>
+<p>同样的，超平面与数据集$\lbrace (x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \ldots \rbrace$之间的几何间隔，被定义为所有几何间隔中的最小值：<br>$$<br>\gamma=\min_i\gamma^{(i)}<br>$$<br>最后，我们导出<strong>最优间隔分类器</strong>（<em>Optimal Margin Classifier</em>）问题：选择$w, b$，最大化$\gamma$，同时满足$\forall(x^{(i)}, y^{(i)})$，$ y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma$（所有数据点的几何间隔都大于该最小几何间隔）。</p>
 <p>目前为止，已经是SVM问题的一个简化版本。</p>
 
       
@@ -114,7 +114,7 @@
         </li>
         
           <li>
-            <span class="label">Categoría:</span>
+            <span class="label">Category:</span>
             
   <div class="article-category">
     <a class="article-category-link" href="/blog-cs229/categories/SVM/">SVM</a>
@@ -143,9 +143,9 @@
     <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
   
   
-    <a href="/blog-cs229/2018/06/29/9. 生成学习算法的例子/" id="article-nav-older" class="article-nav-link-wrap older">
-      <strong class="article-nav-caption">Viejo</strong>
-      <div class="article-nav-title">9. 生成学习算法的例子</div>
+    <a href="/blog-cs229/2018/07/02/11. SVM（二）最优间隔分类器/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">11. SVM（二）最优间隔分类器</div>
     </a>
   
 </nav>
