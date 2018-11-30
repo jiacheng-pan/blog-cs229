@@ -13,18 +13,18 @@
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="监督学习符号定义：   符号 意义     $m$ 训练集包含的数据个数   $x$ 输入变量/特征（feature）   $y$ 输出变量/目标（target）   $(x, y)$ 一个训连样本   $(x^{(i)}, y^{(i)})$ 第i个训练样本    监督学习的主要流程： 线性回归以预测房价为例，我们的目标是导出一个函数（即假设），根据房子的特征（比如大小、卧室数量等等）来预测房">
 <meta property="og:locale" content="Chinese">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-3/4328727.jpg">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-3/2339619.jpg">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-3/49403960.jpg">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-3/85884341.jpg">
-<meta property="og:updated_time" content="2018-06-07T12:38:50.000Z">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/4328727.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/2339619.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/49403960.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/85884341.jpg">
+<meta property="og:updated_time" content="2018-11-30T03:02:51.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="1. 监督学习&amp;梯度下降法">
 <meta name="twitter:description" content="监督学习符号定义：   符号 意义     $m$ 训练集包含的数据个数   $x$ 输入变量/特征（feature）   $y$ 输出变量/目标（target）   $(x, y)$ 一个训连样本   $(x^{(i)}, y^{(i)})$ 第i个训练样本    监督学习的主要流程： 线性回归以预测房价为例，我们的目标是导出一个函数（即假设），根据房子的特征（比如大小、卧室数量等等）来预测房">
-<meta name="twitter:image" content="http://o6vut8vrh.bkt.clouddn.com/18-6-3/4328727.jpg">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/4328727.jpg">
   
   
-    <link rel="icon" href="http://o6vut8vrh.bkt.clouddn.com/avatar.png">
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
   
   <link rel="stylesheet" href="/blog-cs229/css/typing.css">
   <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -112,7 +112,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="监督学习的主要流程："><a href="#监督学习的主要流程：" class="headerlink" title="监督学习的主要流程："></a>监督学习的主要流程：</h3><p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-3/4328727.jpg" alt=""></p>
+<h3 id="监督学习的主要流程："><a href="#监督学习的主要流程：" class="headerlink" title="监督学习的主要流程："></a>监督学习的主要流程：</h3><p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/4328727.jpg" alt=""></p>
 <h3 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h3><p>以预测房价为例，我们的目标是导出一个函数（即假设），根据房子的特征（比如大小、卧室数量等等）来预测房价，那么：</p>
 <ul>
 <li>输入（特征）：$x_1, x_2, …$（比如大小、卧室数量等等）</li>
@@ -126,19 +126,19 @@
 <p>我们定义$$\displaystyle J(\theta)=\frac{1}{2}\sum_{i=1}^m(h_\theta(x)^{(i)}-y_{(i)})^2$$，那么我们的目标就是去选取合适的$\theta$，以最小化$J(\theta)$。</p>
 <h2 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h2><h3 id="搜索算法（梯度下降）"><a href="#搜索算法（梯度下降）" class="headerlink" title="搜索算法（梯度下降）"></a>搜索算法（梯度下降）</h3><p>目的：不断改变$\theta$，从而来减少$J(\theta)$。</p>
 <p>原理：每次都往下降最快的地方走，从而找到一个局部最优解。</p>
-<p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-3/2339619.jpg" alt=""></p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/2339619.jpg" alt=""></p>
 <p>一般会初始化$\vec{\theta}=\vec{0}$，然后每次都沿着梯度方向走，以保证每次都往下降最快的地方走：<br>$$<br>\displaystyle \theta_i:=\theta_i - \alpha\frac{\partial}{\partial \theta_i}J(\theta)<br>$$<br>其中，$:=$表示赋值操作，$\alpha$为步长。</p>
 <p>对于某个训练样本$(x, y)$<br>$$\displaystyle \frac{\partial}{\partial \theta_i}J(\theta) = \frac{\partial}{\partial \theta_i}(\frac{1}{2}(h_\theta(x)-y)^2)$$<br>    $$\displaystyle = 2 \times \frac{1}{2}(h_\theta(x)-y)\frac{\partial}{\partial \theta_i}(h_\theta(x)-y)$$<br>    $$\displaystyle = (h_\theta(x)-y)\frac{\partial}{\partial \theta_i}(\theta_0x_0+…+\theta_nx_n-y)$$<br>    $$\displaystyle =(h_\theta(x)-y) \times x_i$$</p>
 <p>那么，$\theta_i:=\theta_i - \alpha (h_\theta(x)-y) \times x_i$</p>
 <h3 id="批量梯度下降法（Batch-Gradient-Descent）"><a href="#批量梯度下降法（Batch-Gradient-Descent）" class="headerlink" title="批量梯度下降法（Batch Gradient Descent）"></a>批量梯度下降法（Batch Gradient Descent）</h3><p>批量梯度下降法，使用的是所有训练样本的平均梯度：</p>
 <p>$$<br>\displaystyle \theta_i:=\theta_i - \alpha \frac{1}{m} \sum_{j=1}^m(h_\theta(x^{(j)})-y^{(j)}) \times x_i^{(j)}<br>$$</p>
 <p>但每次下降都需要遍历所有样本，效率较低，具体过程可能如下：</p>
-<p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-3/49403960.jpg" alt=""></p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/49403960.jpg" alt=""></p>
 <h3 id="随机梯度下降法（Stochastic-Gradient-Descent）"><a href="#随机梯度下降法（Stochastic-Gradient-Descent）" class="headerlink" title="随机梯度下降法（Stochastic Gradient Descent）"></a>随机梯度下降法（Stochastic Gradient Descent）</h3><p>又称为『增量梯度下降法』</p>
 <p>对每个样本$(x_{(j)}, y_{(j)})$进行：<br>$$<br>\displaystyle \theta_i:=\theta_i - \alpha (h_\theta(x^{(j)})-y^{(j)}) \times x_i^{(j)}<br>$$</p>
 <p>直到收敛</p>
 <p>这时，每次梯度下降只遍历一个样本，具体过程可能如下：</p>
-<p><img src="http://o6vut8vrh.bkt.clouddn.com/18-6-3/85884341.jpg" alt=""></p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/85884341.jpg" alt=""></p>
 
       
     </div>
@@ -239,22 +239,7 @@
 
 
 
-    </div>
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -272,5 +257,5 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-</body>
+  </body>
 </html>

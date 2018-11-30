@@ -13,15 +13,15 @@
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="最优间隔分类器（Optimal Margin Classifier）。其目标是使得最小几何间隔最大化（10. SVM（一）概念）：$$\text{目标(1):} \\\max_{w, b} \gamma \\\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1">
 <meta property="og:locale" content="Chinese">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-4/9336603.jpg">
-<meta property="og:updated_time" content="2018-07-22T13:27:45.445Z">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-4/9336603.jpg">
+<meta property="og:updated_time" content="2018-11-30T03:02:51.219Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="11. SVM（二）最优间隔分类器">
 <meta name="twitter:description" content="最优间隔分类器（Optimal Margin Classifier）。其目标是使得最小几何间隔最大化（10. SVM（一）概念）：$$\text{目标(1):} \\\max_{w, b} \gamma \\\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1">
-<meta name="twitter:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-4/9336603.jpg">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-4/9336603.jpg">
   
   
-    <link rel="icon" href="http://o6vut8vrh.bkt.clouddn.com/avatar.png">
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
   
   <link rel="stylesheet" href="/blog-cs229/css/typing.css">
   <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -108,7 +108,7 @@
 <p>于是，我们的对偶问题简化到了对$W(\alpha)$最大化：<br>$$<br>\max_\alpha W(\alpha) \\<br>\text{s.t. }\alpha_i \geq 0, \sum_iy_i\alpha_i=0<br>$$</p>
 <p>假设，我们解得的对偶问题的解为：$\alpha^\ast =[\alpha_1^\ast ,\alpha_2^\ast , \ldots, \alpha_m^\ast ]$，那么最终原始问题的解可以表示成：</p>
 <p>$$<br>w^\ast =\sum_{i=1}\alpha_i^\ast y^{(i)}x^{(i)}<br>$$</p>
-<p>在原始问题中，还有$b$未得到解决。我们先来观察一下约束项：<br>$$<br>g_i(w,b)=1-y{(i)}(w^Tx^{(i)}+b) \leq 0<br>$$<br><img src="http://o6vut8vrh.bkt.clouddn.com/18-7-4/9336603.jpg" alt=""></p>
+<p>在原始问题中，还有$b$未得到解决。我们先来观察一下约束项：<br>$$<br>g_i(w,b)=1-y{(i)}(w^Tx^{(i)}+b) \leq 0<br>$$<br><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-4/9336603.jpg" alt=""></p>
 <p>我们知道，在数据中，只有少数的几个数据点，他们的函数距离为1（最小），也即$g_i(w,b)=0$，如图所示。</p>
 <p>在整个数据集中，只有这些数据点对约束超平面起了作用，这些数据点被称为支持向量（<em>support vector</em>），其对应的$\alpha_i^\ast  \neq 0$，而其他不是支持向量的数据点，没有对约束超平面起作用，其$\alpha_i^\ast =0$。</p>
 <p>此时，我们已经得到了$w^\ast $，而$b^\ast $的计算如下，找到一个数据点，其$\alpha_j^\ast  \neq 0$(也就是支持向量，其函数间隔为1)，我们就能得到：</p>
@@ -216,22 +216,7 @@
 
 
 
-    </div>
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -249,5 +234,5 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-</body>
+  </body>
 </html>

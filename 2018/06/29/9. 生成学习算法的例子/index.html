@@ -13,15 +13,15 @@
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="例一：高斯判别分析和logistic函数我们来看一个例子，对于一个高斯判别分析问题，根据贝叶斯：$$\begin{align}p(y=1|x) &amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x)} \\&amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x|y=0)p(y=0)+p(x|y=1)p(y=1)}\end{align}$$在这里，我们提出几个假设：  $p(y">
 <meta property="og:locale" content="Chinese">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/2018-06-30-084350.png">
-<meta property="og:updated_time" content="2018-07-01T08:11:35.000Z">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/2018-06-30-084350.png">
+<meta property="og:updated_time" content="2018-11-30T03:02:51.219Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="9. 生成学习算法的例子">
 <meta name="twitter:description" content="例一：高斯判别分析和logistic函数我们来看一个例子，对于一个高斯判别分析问题，根据贝叶斯：$$\begin{align}p(y=1|x) &amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x)} \\&amp;amp;= \frac{p(x|y=1)p(y=1)}{p(x|y=0)p(y=0)+p(x|y=1)p(y=1)}\end{align}$$在这里，我们提出几个假设：  $p(y">
-<meta name="twitter:image" content="http://o6vut8vrh.bkt.clouddn.com/2018-06-30-084350.png">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/2018-06-30-084350.png">
   
   
-    <link rel="icon" href="http://o6vut8vrh.bkt.clouddn.com/avatar.png">
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
   
   <link rel="stylesheet" href="/blog-cs229/css/typing.css">
   <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -85,7 +85,7 @@
 <li>$x$的条件概率分布（$p(x|y=0)$和$p(x|y=1)$）满足高斯分布。</li>
 </ol>
 <p>考虑二维的情况：</p>
-<p><img src="http://o6vut8vrh.bkt.clouddn.com/2018-06-30-084350.png" alt="image-20180630164349595"></p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/2018-06-30-084350.png" alt="image-20180630164349595"></p>
 <p>蓝色数据表达的是$p(x|y=0)$的分布，红色数据表达的是$p(x|y=1)$的分布，两条蓝色和红色的曲线分别是它们的概率密度曲线。</p>
 <p>而灰色的曲线则表示了$p(y=1|x)$的概率密度曲线。</p>
 <p>假设$p(x|y=0) \sim N(\mu_0, \sigma_0)$，$p(x|y=1) \sim N(\mu_1, \sigma_1)$，而$p(y)$均匀分布那么：<br>$$<br>\begin{align}<br>p(y=1|x) &amp;= \frac{N(\mu_0,\sigma_0)}{N(\mu_0,\sigma_0)+N(\mu_1,\sigma_1)} \\<br>&amp;= \cdots \\<br>&amp;= \frac{1}{1+\frac{\sigma_0}{\sigma_1}exp(2\sigma_1^2(x-\mu_0)^2-2\sigma_0^2(x-\mu_1)^2}<br>\end{align}<br>$$<br>事实上，这条曲线跟我们之前见过的<em>logistic</em>曲线非常像，特别是当我们假设$\sigma_0=\sigma_1$的时候，就是一条<em>logistic</em>曲线。</p>
@@ -207,22 +207,7 @@
 
 
 
-    </div>
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -240,5 +225,5 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-</body>
+  </body>
 </html>

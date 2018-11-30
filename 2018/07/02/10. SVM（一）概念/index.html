@@ -13,16 +13,16 @@
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="SVM，指的是支持向量机（support vector machines）。 支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：  但是很明显，上图中虽然a, c都对数据进行了有效的分割。但很明显，都不如b分割的好。 我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确">
 <meta property="og:locale" content="Chinese">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-3/83131877.jpg">
-<meta property="og:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-3/34659777.jpg">
-<meta property="og:updated_time" content="2018-07-03T09:10:44.000Z">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/83131877.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/34659777.jpg">
+<meta property="og:updated_time" content="2018-11-30T03:02:51.220Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="10. SVM（一）概念">
 <meta name="twitter:description" content="SVM，指的是支持向量机（support vector machines）。 支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：  但是很明显，上图中虽然a, c都对数据进行了有效的分割。但很明显，都不如b分割的好。 我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确">
-<meta name="twitter:image" content="http://o6vut8vrh.bkt.clouddn.com/18-7-3/83131877.jpg">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/83131877.jpg">
   
   
-    <link rel="icon" href="http://o6vut8vrh.bkt.clouddn.com/avatar.png">
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
   
   <link rel="stylesheet" href="/blog-cs229/css/typing.css">
   <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
@@ -82,7 +82,7 @@
       
         <p><em>SVM</em>，指的是支持向量机（<em>support vector machines</em>）。</p>
 <p>支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：</p>
-<p><img src="http://o6vut8vrh.bkt.clouddn.com/18-7-3/83131877.jpg" alt=""></p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/83131877.jpg" alt=""></p>
 <p>但是很明显，上图中虽然<em>a, c</em>都对数据进行了有效的分割。但很明显，都不如<em>b</em>分割的好。</p>
 <p>我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确的情况下，间隔越大，我们认为对数据的分类越好。</p>
 <p>我们的目标是得到数据的分类：$y \in \lbrace -1, +1 \rbrace$。</p>
@@ -95,7 +95,7 @@
 </ol>
 <p>并且，很明显，只有当函数间隔$\hat{\gamma}&gt;0$时，分类结果是正确的。</p>
 <p>最后，超平面与数据集$\lbrace (x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \ldots \rbrace$之间的函数间隔，被定义为所有函数间隔中的最小值：<br>$$<br>\hat{\gamma}=\min_i\hat{\gamma}^{(i)}<br>$$</p>
-<h3 id="几何间隔（geometric-margin）"><a href="#几何间隔（geometric-margin）" class="headerlink" title="几何间隔（geometric margin）"></a>几何间隔（geometric margin）</h3><p><img src="http://o6vut8vrh.bkt.clouddn.com/18-7-3/34659777.jpg" alt=""></p>
+<h3 id="几何间隔（geometric-margin）"><a href="#几何间隔（geometric-margin）" class="headerlink" title="几何间隔（geometric margin）"></a>几何间隔（geometric margin）</h3><p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/34659777.jpg" alt=""></p>
 <p>从点$(x^{(i)}, y^{(i)})$出发，对超平面做垂线，得到点D，我们知道他们之间的距离，就是该超平面到数据点$(x^{(i)}, y^{(i)})$的几何间隔。</p>
 <p>经过推导，D的坐标可以表示为：<br>$$<br>x^{(i)}-\gamma^{(i)}\frac{w}{||w||}<br>$$<br>又因为，D在超平面$w^Tx+b=0$上，所以：<br>$$<br>\begin{align}<br>&amp; w^T(x^{(i)}-\gamma^{(i)}\frac{w}{||w||})+b=0 \\<br>&amp; \Rightarrow w^Tx^{(i)}+b=\gamma^{(i)} \cdot \frac{w^Tw}{||w||}=\gamma^{(i)} \cdot ||w|| \\<br>&amp; \Rightarrow \gamma^{(i)}=(\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}<br>\end{align}<br>$$<br>加上正负分类的判断：<br>$$<br>\gamma^{(i)}=y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||})<br>$$<br>我们可以看到，几何间隔跟函数间隔之间存在如下的关系：<br>$$<br>\hat{\gamma}^{(i)} = \frac{\gamma^{(i)}}{||w||}<br>$$</p>
 <p>同样的，超平面与数据集$\lbrace (x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \ldots \rbrace$之间的几何间隔，被定义为所有几何间隔中的最小值：<br>$$<br>\gamma=\min_i\gamma^{(i)}<br>$$<br>最后，我们导出<strong>最优间隔分类器</strong>（<em>Optimal Margin Classifier</em>）问题：选择$w, b$，最大化$\gamma$，同时满足$\forall(x^{(i)}, y^{(i)})$，$ y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma$（所有数据点的几何间隔都大于该最小几何间隔）。</p>
@@ -203,22 +203,7 @@
 
 
 
-    </div>
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -236,5 +221,5 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-</body>
+  </body>
 </html>
