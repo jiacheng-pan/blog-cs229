@@ -14,7 +14,7 @@
 <meta property="og:description" content="当数据中存在异常点时，比如上述的情况，导致原先可以用直线a分割的数据现在不得不用b来进行，以保证完美的分割。由此我们引出了非线性决策边界（non-linear decision boundaries）来解决这样的问题。 观察原SVM问题的目标：$$\min_{w, b} \frac{1}{2}||w|^2 \\\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i">
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-25/83102162.jpg">
-<meta property="og:updated_time" content="2018-11-30T03:02:51.220Z">
+<meta property="og:updated_time" content="2019-01-05T06:14:47.556Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="13. SVM（四）非线性决策边界">
 <meta name="twitter:description" content="当数据中存在异常点时，比如上述的情况，导致原先可以用直线a分割的数据现在不得不用b来进行，以保证完美的分割。由此我们引出了非线性决策边界（non-linear decision boundaries）来解决这样的问题。 观察原SVM问题的目标：$$\min_{w, b} \frac{1}{2}||w|^2 \\\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i">
@@ -81,12 +81,18 @@
       
         <p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-25/83102162.jpg" alt=""></p>
 <p>当数据中存在异常点时，比如上述的情况，导致原先可以用直线a分割的数据现在不得不用b来进行，以保证完美的分割。由此我们引出了<strong>非线性决策边界</strong>（<em>non-linear decision boundaries</em>）来解决这样的问题。</p>
-<p>观察原SVM问题的目标：<br>$$<br>\min_{w, b} \frac{1}{2}||w|^2 \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1, i=1,\ldots,m<br>$$<br>我们为原公式增加惩罚项，对不同的数据点增加不同的惩罚，使得所有样本能够更好地分割：<br>$$<br>\min_{w, b} \frac{1}{2}||w|^2+c\sum_{i=1}^m\xi_i, \xi_i\geq0 \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1-\xi_i, i=1,\ldots,m<br>$$<br>注意到，我们之前认为$y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1$是分类正确的，在这里我们允许一部分样本小于1，也就是说明我们允许了一部分样本分类错误。</p>
-<p>构建拉格朗日算子：<br>$$<br>{\cal L}(w, b, \xi, \alpha, \gamma) = \frac{1}{2}||w|^2+c\sum_i\xi_i-\sum_i^m\alpha_i(y^{(i)} (w^T \cdot x^{(i)}+b)-1+\xi_i)-\sum_i^m\gamma_i\xi_i<br>$$<br>对偶：<br>$$<br>\max W(\alpha) = \sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j\langle x_i \cdot x_j \rangle<br>$$<br>跟原先的SVM问题的唯一区别在于其限制条件为：<br>$$<br>\sum_{i=1}^my^{(i)}\alpha=0 \\<br>0 \leq \alpha_i \leq c<br>$$<br>其收敛条件：</p>
+<p>观察原SVM问题的目标：<br>$$<br>\min_{w, b} \frac{1}{2}||w|^2 \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1, i=1,\ldots,m<br>$$<br>我们为原公式增加惩罚项，对不同的数据点增加不同的惩罚，使得所有样本能够更好地分割：<br>$$<br>\min_{w, b} \frac{1}{2}||w|^2+c\sum_{i=1}^m\xi_i, \xi_i\geq0 \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1-\xi_i, i=1,\ldots,m<br>$$<br>注意到，我们之前认为$ y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1 $是分类正确的，在这里我们允许一部分样本小于1，也就是说明我们允许了一部分样本分类错误。</p>
+<p>构建拉格朗日算子：<br>$$<br>{\cal L}(w, b, \xi, \alpha, \gamma) = \frac{1}{2}||w|^2+c\sum_i\xi_i-\sum_i^m\alpha_i(y^{(i)} (w^T \cdot x^{(i)}+b)-1+\xi_i)-\sum_i^m\gamma_i\xi_i<br>$$<br>对偶：<br>$$<br>\max W(\alpha) = \sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j\langle x_i \cdot x_j \rangle<br>$$<br>跟原先的SVM问题的唯一区别在于其限制条件为<br>$$<br>\sum_{i=1}^my^{(i)}\alpha=0 \\<br>0 \leq \alpha_i \leq c<br>$$<br>其收敛条件：</p>
 <ul>
-<li>对于大部分数据点：$\alpha_i=0 \Rightarrow y^{(i)} (w^T \cdot x^{(i)}+b) \geq 1$</li>
-<li>对于异常点：$\alpha_i=c$</li>
-<li>对于最近点：$0&lt;\alpha_i&lt;c$</li>
+<li><p>对于大部分数据点：</p>
+<p>$$<br>\alpha_i=0 \Rightarrow y^{(i)} (w^T \cdot x^{(i)}+b) \geq 1<br>$$</p>
+</li>
+<li><p>对于异常点：</p>
+<p>$$<br>\alpha_i = c<br>$$</p>
+</li>
+<li><p>对于最近点：</p>
+<p>$$<br>0&lt;\alpha_i&lt;c<br>$$</p>
+</li>
 </ul>
 
       
