@@ -3,20 +3,23 @@
 <head>
   <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
   
-  <title>14. 经验风险最小化（ERM） | Machine Learning | cs229</title>
+  <title>14. 经验风险最小化 | Machine Learning | cs229</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="就线性分类模型而言，可以将其表示为：$$h_\theta(x)=g(\theta^Tx), \\g(z) = 1\lbrace z \geq 0 \rbrace$$其中，训练集表示为：$$S=\lbrace (x^{(i)}, y^{(i)}) \rbrace _ {i = 1} ^ m, (x^{(i)}, y^{(i)}) \sim {\cal D}$$这里假设了训练数据都是独立同分布的。 那">
 <meta name="keywords" content="ERM,经验风险">
 <meta property="og:type" content="article">
-<meta property="og:title" content="14. 经验风险最小化（ERM）">
-<meta property="og:url" content="https://jackieanxis.github.io/2018/06/03/14.经验风险最小化（ERM）/index.html">
+<meta property="og:title" content="14. 经验风险最小化">
+<meta property="og:url" content="https://jackieanxis.github.io/2019/01/05/14. 经验风险最小化/index.html">
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="就线性分类模型而言，可以将其表示为：$$h_\theta(x)=g(\theta^Tx), \\g(z) = 1\lbrace z \geq 0 \rbrace$$其中，训练集表示为：$$S=\lbrace (x^{(i)}, y^{(i)}) \rbrace _ {i = 1} ^ m, (x^{(i)}, y^{(i)}) \sim {\cal D}$$这里假设了训练数据都是独立同分布的。 那">
 <meta property="og:locale" content="Chinese">
-<meta property="og:updated_time" content="2019-01-06T02:24:14.125Z">
+<meta property="og:image" content="https://jackieanxis.github.io/Users/jackie/Repository/blog/cs229/source/_posts/assets/image-20190106143941030.png">
+<meta property="og:image" content="https://jackieanxis.github.io/Users/jackie/Repository/blog/cs229/source/_posts/assets/image-20190106154201189.png">
+<meta property="og:updated_time" content="2019-01-06T07:46:00.278Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="14. 经验风险最小化（ERM）">
+<meta name="twitter:title" content="14. 经验风险最小化">
 <meta name="twitter:description" content="就线性分类模型而言，可以将其表示为：$$h_\theta(x)=g(\theta^Tx), \\g(z) = 1\lbrace z \geq 0 \rbrace$$其中，训练集表示为：$$S=\lbrace (x^{(i)}, y^{(i)}) \rbrace _ {i = 1} ^ m, (x^{(i)}, y^{(i)}) \sim {\cal D}$$这里假设了训练数据都是独立同分布的。 那">
+<meta name="twitter:image" content="https://jackieanxis.github.io/Users/jackie/Repository/blog/cs229/source/_posts/assets/image-20190106143941030.png">
   
   
     <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
@@ -32,7 +35,7 @@
     
   
       <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
-        <article id="post-14.经验风险最小化（ERM）" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-14. 经验风险最小化" class="article article-type-post" itemscope itemprop="blogPost">
   <header id="header" class="header">
     <div class="mobile-nav">
       <h1 class="nickname">Jackie Anxis</h1>
@@ -69,7 +72,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      14. 经验风险最小化（ERM）
+      14. 经验风险最小化
     </h1>
   
 
@@ -90,11 +93,45 @@
 </li>
 </ul>
 <p>我们引出两个引理：</p>
+<ul>
+<li><p>联合界引理（Union Bound）</p>
 <blockquote>
-<p>联合界引理（Union Bound）</p>
 <p>$A_1, A_2, \ldots , A_k$是k个事件，他们之间并不一定是独立分布的，有：<br>$$<br>P(A_1 \cup \ldots \cup A_k) \leq P(A_1) + \dots + P(A_k)<br>$$</p>
-<p>Hoeffding不等式（Hoeffding Inequality）</p>
 </blockquote>
+</li>
+</ul>
+<ul>
+<li><p>Hoeffding不等式（Hoeffding Inequality）</p>
+<blockquote>
+<p>$z_1, \ldots z_m$是m个iid（independent and identically distribution，独立同分布），他们都服从伯努利分布，$P(z_i=1) = \phi$，那么对$\phi$的估计：<br>$$<br>{\hat \phi} = \frac{1}{m}\sum_{i=1}^m z_i<br>$$<br>于是，给定$\gamma &gt; 0$，有：<br>$$<br>P(|{\hat{\phi}} - \phi| &gt; \gamma) \leq 2 exp(-2\gamma^2m)<br>$$</p>
+</blockquote>
+<p>Hoeffding不等式的直观解释就是，下图中的阴影面积，会有上界。</p>
+<p><img src="/Users/jackie/Repository/blog/cs229/source/_posts/assets/image-20190106143941030.png" alt="image-20190106143941030"></p>
+</li>
+</ul>
+<h3 id="一致收敛-Uniform-Conversions"><a href="#一致收敛-Uniform-Conversions" class="headerlink" title="一致收敛 Uniform Conversions"></a>一致收敛 Uniform Conversions</h3><p>对于某个$h_j \in \cal{H}$，我们定义$z_i = 1 \lbrace h_j(x^{(i)}) \neq y^{(i)}\rbrace \in \lbrace{}$为第i个样本被分类错误的指示函数的值，对于logistic而言，它服从伯努利分布。</p>
+<p>那么：</p>
+<ol>
+<li>泛化误差：$P(z_i=1) = \varepsilon(h_j)$</li>
+<li>训练误差：${\hat{\varepsilon}}(h_j) = \frac{1}{m}\sum_{i=1}^m z_i$</li>
+</ol>
+<p>根据Hoeffding不等式，我们能够得到：<br>$$<br>P(|{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| &gt; \gamma) \leq 2e^{-2\gamma^2m}<br>$$<br>接着，我们定义训练误差和泛化误差之间的差大于$\gamma$（$|{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| &gt; \gamma$）为事件$A_j$，根据以上结论，我们可知：<br>$$<br>P(A_j) \leq 2e^{-2\gamma^2m}<br>$$<br>那么根据联合界引理：<br>$$<br>\begin{array}{l}<br>&amp; P(\exists h_j \in H, |{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| &gt; \gamma) \\<br>= &amp; P(A_1 \cup A_2 \cup \ldots \cup A_k) \\<br>\leq &amp; \sum_{i=1}^k P(A_i) \\<br>\leq &amp; \sum_{i=1}^k 2e^{-2\gamma^2m} \\<br>= &amp; 2ke^{-2\gamma^2m}<br>\end{array}<br>$$<br>可以表述为：存在$h_j$使$|{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| &gt; \gamma$的概率$\leq 2ke^{-2\gamma^2m}$。</p>
+<p>等价于：不存在$h_j$使$|{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| &gt; \gamma$的概率$\geq 1 - 2ke^{-2\gamma^2m}$。</p>
+<p>等价于：$\cal H$中任意的$h_j$使得$|{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| \leq \gamma$的概率$\geq 1 - 2ke^{-2\gamma^2m}$。</p>
+<p>我们将上面这个结论称之为<strong>一致收敛 Uniform Conversions</strong>，也就是说事实上，所有的假设，训练误差和泛化误差之间都存在上界。</p>
+<h3 id="样本复杂度，误差界以及偏差方差权衡"><a href="#样本复杂度，误差界以及偏差方差权衡" class="headerlink" title="样本复杂度，误差界以及偏差方差权衡"></a>样本复杂度，误差界以及偏差方差权衡</h3><p>上面的结论，我们可以引出以下的一些推论：</p>
+<h4 id="样本复杂度-Sample-Complexity"><a href="#样本复杂度-Sample-Complexity" class="headerlink" title="样本复杂度 Sample Complexity"></a>样本复杂度 Sample Complexity</h4><p>给定$\gamma, \delta$，需要多大的训练集合（$m$）？其中$\delta$指的是泛化误差和训练误差之差大于$\gamma$的概率。</p>
+<p> 我们知道，$\delta \leq 2ke^{-2\gamma^2m}$，可求解：<br>$$<br>m \geq \frac{1}{2 \gamma ^ 2} log(\frac{2k}{\delta})<br>$$<br>这个，也被称为样本复杂度（类似于时间复杂度），指的是，只要满足上面这个条件，任意$h \in \cal H$，都能得到$|{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| \leq \gamma$</p>
+<h4 id="误差界-Error-Bound"><a href="#误差界-Error-Bound" class="headerlink" title="误差界 Error Bound"></a>误差界 Error Bound</h4><p>给定$\delta, m$时，我们会得到多大的误差上界$\gamma$。</p>
+<p>经过求解可以得到：<br>$$<br>P(\forall h \in {\cal H}, |{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| \leq \sqrt{\frac{1}{2m}log(\frac{2k}{\delta})}) \geq 1 - \delta<br>$$<br>也就是误差上界是：$\gamma = \sqrt{\frac{1}{2m}log(\frac{2k}{\delta})}$。</p>
+<h3 id="偏差方差权衡-Bias-Variance-Tradeoff"><a href="#偏差方差权衡-Bias-Variance-Tradeoff" class="headerlink" title="偏差方差权衡 Bias Variance Tradeoff"></a>偏差方差权衡 Bias Variance Tradeoff</h3><p>我们定义：<br>$$<br>\begin{align}<br>{\hat h} &amp;= \mathop{\arg \min}_{h \in \cal H} {\hat \varepsilon}(h) \text{, 使得训练误差最小的h}<br>&amp;\tag{1} \\<br>h^\ast &amp;= \mathop{\arg \min}_{h \in \cal H} \varepsilon(h) \text{, 使得泛化误差最小的h} \tag{2}<br>\end{align}<br>$$<br>假如：<br>$$<br>\forall h \in {\cal H}, |{\hat{\varepsilon}}(h_j) - \varepsilon(h_j)| \leq \gamma \tag{3}<br>$$</p>
+<p>那么：<br>$$<br>\begin{align}<br>\varepsilon(\hat h) &amp;\leq {\hat \varepsilon}({\hat h}) + \gamma, &amp;\text{derived from (3)}\\<br>&amp;\leq {\hat \varepsilon}(h^\ast) + \gamma, &amp;\text{derived from (1)}\\<br>&amp;\leq {\varepsilon(h^\ast)} + \gamma + \gamma, &amp;\text{ derived from (3)}<br>\end{align}<br>$$<br>于是，我们得到如下定理：</p>
+<p>给定大小为$k$的假设集合$\cal H$，给定$m, \delta$，那么：<br>$$<br>\varepsilon(\hat h) \leq \underbrace{(\min_{h \in {\cal H}}\varepsilon(h))}_{\varepsilon(h^\ast)} + 2 \underbrace{\sqrt{\frac{1}{2m}log(\frac{2k}{\delta})}}_{\gamma}<br>$$<br>的概率不低于$1-\delta$。</p>
+<p>可以想象，为了得到最佳的假设$h^\ast$，我们尽可能增大$\cal H$（能够减小$\varepsilon(h^\ast)$），但随之而来的就是$\gamma$的增大，所以需要在这两者之间进行权衡，我们指的就是<strong>偏差方差权衡 Bias Variance Tradeoff</strong>。</p>
+<p><img src="/Users/jackie/Repository/blog/cs229/source/_posts/assets/image-20190106154201189.png" alt="image-20190106154201189"></p>
+<p>由此，我们得到一个推论：</p>
+<p>给定$\delta, \gamma$，为了能够保证$\varepsilon(\hat h) \leq (\min_{h \in {\cal H}}\varepsilon(h)) + 2\gamma$的概率不小于$1-\delta$（ERM得到的假设的一般误差，与最佳假设的一般误差之间，差值不大于$2\gamma$）</p>
+<p>我们需要保证：<br>$$<br>m \geq \frac{1}{2\gamma^2}log(\frac{2k}{\delta})<br>$$</p>
 
       
     </div>
@@ -102,8 +139,8 @@
       <ul class="article-meta">
         <li>
           <span class="label">Published Date:</span>
-          <a href="/blog-cs229/2018/06/03/14.经验风险最小化（ERM）/" class="article-date">
-  <time datetime="2018-06-03T12:03:04.000Z" itemprop="datePublished">2018-06-03</time>
+          <a href="/blog-cs229/2019/01/05/14. 经验风险最小化/" class="article-date">
+  <time datetime="2019-01-05T05:53:00.000Z" itemprop="datePublished">2019-01-05</time>
 </a>
 
         </li>
@@ -135,19 +172,12 @@
     
 <nav id="article-nav" class="article-nav">
   
-    <a href="/blog-cs229/2018/06/03/2. 线性回归/" id="article-nav-newer" class="article-nav-link-wrap newer">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          2. 线性回归
-        
-      </div>
-    </a>
+    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
   
   
-    <a href="/blog-cs229/2018/06/03/1. 监督学习&梯度下降法/" id="article-nav-older" class="article-nav-link-wrap older">
+    <a href="/blog-cs229/2018/07/25/13. SVM（四）非线性决策边界/" id="article-nav-older" class="article-nav-link-wrap older">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">1. 监督学习&amp;梯度下降法</div>
+      <div class="article-nav-title">13. SVM（四）非线性决策边界</div>
     </a>
   
 </nav>
