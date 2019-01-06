@@ -9,12 +9,12 @@
 <meta name="keywords" content="SVM,最优间隔分类器,拉格朗日乘子法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="11. SVM（二）最优间隔分类器">
-<meta property="og:url" content="http://jackieanxis.github.io/2018/07/03/11. SVM（二）最优间隔分类器/index.html">
+<meta property="og:url" content="https://jackieanxis.github.io/2018/07/03/11. SVM（二）最优间隔分类器/index.html">
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="最优间隔分类器（Optimal Margin Classifier）。其目标是使得最小几何间隔最大化（10. SVM（一）概念）：$$\text{目标(1):} \\\max_{w, b} \gamma \\\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1">
 <meta property="og:locale" content="Chinese">
 <meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-4/9336603.jpg">
-<meta property="og:updated_time" content="2018-11-30T03:02:51.219Z">
+<meta property="og:updated_time" content="2019-01-05T14:24:08.425Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="11. SVM（二）最优间隔分类器">
 <meta name="twitter:description" content="最优间隔分类器（Optimal Margin Classifier）。其目标是使得最小几何间隔最大化（10. SVM（一）概念）：$$\text{目标(1):} \\\max_{w, b} \gamma \\\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1">
@@ -46,17 +46,17 @@
         <nav id="main-nav" class="main-nav nav-left">
     
     
-      <a class="main-nav-link" href="http://jackieanxis.github.io">Home</a>
+      <a class="main-nav-link" href="https://jackieanxis.github.io">Home</a>
     
-      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-frontend">FrontEnd</a>
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-frontend">FrontEnd</a>
     
-      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-cs229">MLcs229</a>
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-cs229">MLcs229</a>
     
-      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-papers">PaperReading</a>
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-papers">PaperReading</a>
     
       <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
     
-      <a class="main-nav-link" href="http://jackieanxis.github.io/blog-others">Others</a>
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-others">Others</a>
     
       <a class="main-nav-link" href="/blog-cs229/about">About</a>
     
@@ -84,8 +84,9 @@
 <li>增大$\hat{\gamma}$</li>
 <li>减小$||w||$</li>
 </ol>
-<p>针对第一种可能，我们要证明其无效性。假如，我们增大$\hat{\gamma}$到$\hat{\gamma}_1 := \lambda \hat{\gamma}$，因为$\hat{\gamma}=y(w^Tx+b)$，可以视作$w_1:=\lambda w, b_1 = \lambda b$。所以，此时<br>$$<br>\frac{\hat{\gamma_1}}{||w_1||}=\frac{\lambda \hat{\gamma}}{||\lambda w||} = \frac{\hat{\gamma}}{||w||} \\<br>$$<br>没有发生任何改变，所以第一条策略不可行。于是，我们可以固定$\hat{\gamma}=1$</p>
-<p>此时，上述目标(2)可以表述成：<br>$$<br>\text{目标(3):} \\<br>\min_{w, b} \frac{1}{2}||w|^2 \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1, i=1,\ldots,n<br>$$</p>
+<p>针对第一种可能，我们要证明其无效性。假如，我们增大$\hat{\gamma}$到${\hat{\gamma}}_1 := \lambda {\hat{\gamma}}$，因为$\hat{\gamma}=y(w^Tx+b)$，可以视作$w_1:=\lambda w, b_1 = \lambda b$。所以，此时<br>$$<br>\frac{\hat{\gamma_1}}{||w_1||}=\frac{\lambda \hat{\gamma}}{||\lambda w||} = \frac{\hat{\gamma}}{||w||} \\<br>$$<br>没有发生任何改变，所以第一条策略不可行。于是，我们可以固定$\hat{\gamma}=1$</p>
+<p>此时，上述目标(2)可以表述成：<br>$$<br>\text{目标(3):} \\<br>\min_{w, b} \frac{1}{2}||w||^2 \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1, i=1,\ldots,n<br>$$</p>
+<p>因为最小化$||w||$和最小化$\frac{1}{2}||w||^2$是一致的。</p>
 <h2 id="拉格朗日乘子法（Lagrange-Multiplier）"><a href="#拉格朗日乘子法（Lagrange-Multiplier）" class="headerlink" title="拉格朗日乘子法（Lagrange Multiplier）"></a>拉格朗日乘子法（Lagrange Multiplier）</h2><p>为了解决上述的<strong>凸优化问题</strong>，我们引入拉格朗日乘子法<em>Lagrange Multiplier</em>来解决这个问题。</p>
 <p>我们首先来看看<strong>凸优化问题</strong>的定义：<br>$$<br>\min_wf(w) \\<br>\text{s.t. }g_i(w) \leq 0, h_i(w) =0<br>$$<br>构建拉格朗日乘子：<br>$$<br>{\cal L}(w, \alpha, \beta) = f(w)+\sum_i\alpha_ig_i(w)+\sum_i\beta_ih_i(w)<br>$$<br>定义：<br>$$<br>\theta_p(w) = \max_{\alpha_i&gt;0, \beta}{\cal L}(w, \alpha, \beta)<br>$$<br>观察$\theta_p(w)$：</p>
 <ol>

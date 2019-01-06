@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>14. 经验风险最小化（ERM） | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="就线性分类模型而言，可以将其表示为：$$h_\theta(x)=g(\theta^Tx), \\g(z) = 1\lbrace z \geq 0 \rbrace$$其中，训练集表示为：$$S=\lbrace (x^{(i)}, y^{(i)}) \rbrace _ {i = 1} ^ m, (x^{(i)}, y^{(i)}) \sim {\cal D}$$这里假设了训练数据都是独立同分布的。 那">
+<meta name="keywords" content="ERM,经验风险">
+<meta property="og:type" content="article">
+<meta property="og:title" content="14. 经验风险最小化（ERM）">
+<meta property="og:url" content="https://jackieanxis.github.io/2018/06/03/14.经验风险最小化（ERM）/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="就线性分类模型而言，可以将其表示为：$$h_\theta(x)=g(\theta^Tx), \\g(z) = 1\lbrace z \geq 0 \rbrace$$其中，训练集表示为：$$S=\lbrace (x^{(i)}, y^{(i)}) \rbrace _ {i = 1} ^ m, (x^{(i)}, y^{(i)}) \sim {\cal D}$$这里假设了训练数据都是独立同分布的。 那">
+<meta property="og:locale" content="Chinese">
+<meta property="og:updated_time" content="2019-01-06T02:24:14.125Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="14. 经验风险最小化（ERM）">
+<meta name="twitter:description" content="就线性分类模型而言，可以将其表示为：$$h_\theta(x)=g(\theta^Tx), \\g(z) = 1\lbrace z \geq 0 \rbrace$$其中，训练集表示为：$$S=\lbrace (x^{(i)}, y^{(i)}) \rbrace _ {i = 1} ^ m, (x^{(i)}, y^{(i)}) \sim {\cal D}$$这里假设了训练数据都是独立同分布的。 那">
+  
+  
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-14.经验风险最小化（ERM）" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jackie Anxis</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="https://jackieanxis.github.io">Home</a>
+    
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-frontend">FrontEnd</a>
+    
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-cs229">MLcs229</a>
+    
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-papers">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-others">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      14. 经验风险最小化（ERM）
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>就线性分类模型而言，可以将其表示为：<br>$$<br>h_\theta(x)=g(\theta^Tx), \\<br>g(z) = 1\lbrace z \geq 0 \rbrace<br>$$<br>其中，训练集表示为：<br>$$<br>S=\lbrace (x^{(i)}, y^{(i)}) \rbrace _ {i = 1} ^ m, (x^{(i)}, y^{(i)}) \sim {\cal D}<br>$$<br>这里假设了训练数据都是独立同分布的。</p>
+<p>那么，我们认为，这个线性分类器的<strong>训练误差</strong>就可以表示为它分类错误的样本比例：<br>$$<br>{\hat{\varepsilon}}(h_\theta) = {\hat{\varepsilon}}_s(h_\theta) = \frac{1}{m}\sum_{i=1}^m1\lbrace h_\theta (x^{(i)}) \neq y^{(i)} \rbrace<br>$$<br>在这里，我们把训练误差也称为<strong>风险</strong>（risk），由此我们导出了经验风险最小化。</p>
+<h3 id="经验风险最小化（Empirical-Risk-Minimization，ERM）"><a href="#经验风险最小化（Empirical-Risk-Minimization，ERM）" class="headerlink" title="经验风险最小化（Empirical Risk Minimization，ERM）"></a>经验风险最小化（Empirical Risk Minimization，ERM）</h3><p>经验风险最小化，最终导出一组参数，能够使得训练误差最小：<br>$$<br>{\hat{\theta}} = \arg \min {\hat{\varepsilon}}_s(h_\theta)<br>$$</p>
+<p>我们再定义一个假设类${\cal{H}} = \lbrace h_\theta, \theta \in {\Bbb R}^{n+1} \rbrace$，它是所有假设的集合。在线性分类中，也就是所有线性分类器的集合。</p>
+<p>那么，我们可以重新定义一次ERM：<br>$$<br>{\hat h} = \mathop{\arg \min}_{h \in {\cal H}} {\hat \varepsilon}(h)<br>$$<br>对上述公式的直观理解就是：从假设类中选取一个假设，使得训练误差最小。我们这里用了$\hat{h}$表示估计，因为毕竟不可能得到最好的假设，只能得到对这个最好的假设的估计。</p>
+<p>但这仍然不是目标，我们的目标是使得<strong>泛化误差 Generalization Error</strong>最小化，也即新的数据集上分类错误的概率：<br>$$<br>\varepsilon(h)=P_{(x,y) \sim {\cal D}}(h(x) \neq y)<br>$$<br>接下去，为了证明：</p>
+<ul>
+<li><p>（1）${\hat \varepsilon} \approx \varepsilon$，训练误差近似于泛化误差（理解为，泛化误差和训练误差之间的差异存在上界）</p>
+</li>
+<li><p>（2）ERM输出的泛化误差$\varepsilon({\hat h})$存在上界；</p>
+</li>
+</ul>
+<p>我们引出两个引理：</p>
+<blockquote>
+<p>联合界引理（Union Bound）</p>
+<p>$A_1, A_2, \ldots , A_k$是k个事件，他们之间并不一定是独立分布的，有：<br>$$<br>P(A_1 \cup \ldots \cup A_k) \leq P(A_1) + \dots + P(A_k)<br>$$</p>
+<p>Hoeffding不等式（Hoeffding Inequality）</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2018/06/03/14.经验风险最小化（ERM）/" class="article-date">
+  <time datetime="2018-06-03T12:03:04.000Z" itemprop="datePublished">2018-06-03</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Category:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/blog-cs229/categories/ERM/">ERM</a>
+  </div>
+
+
+          </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/ERM/">ERM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/经验风险/">经验风险</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/blog-cs229/2018/06/03/2. 线性回归/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          2. 线性回归
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog-cs229/2018/06/03/1. 监督学习&梯度下降法/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">1. 监督学习&amp;梯度下降法</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
