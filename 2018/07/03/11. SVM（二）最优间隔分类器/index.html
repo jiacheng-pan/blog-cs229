@@ -9,7 +9,7 @@
 <meta name="keywords" content="SVM,最优间隔分类器,拉格朗日乘子法">
 <meta property="og:type" content="article">
 <meta property="og:title" content="11. SVM（二）最优间隔分类器">
-<meta property="og:url" content="https://jackieanxis.github.io/2018/07/03/11. SVM（二）最优间隔分类器/index.html">
+<meta property="og:url" content="https://jiacheng-pan.github.io/2018/07/03/11. SVM（二）最优间隔分类器/index.html">
 <meta property="og:site_name" content="Machine Learning | cs229">
 <meta property="og:description" content="最优间隔分类器（Optimal Margin Classifier）。其目标是使得最小几何间隔最大化（10. SVM（一）概念）：$$\text{目标(1):} \\\max_{w, b} \gamma \\\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1">
 <meta property="og:locale" content="Chinese">
@@ -37,7 +37,7 @@
         <article id="post-11. SVM（二）最优间隔分类器" class="article article-type-post" itemscope itemprop="blogPost">
   <header id="header" class="header">
     <div class="mobile-nav">
-      <h1 class="nickname">Jackie Anxis</h1>
+      <h1 class="nickname">Jiacheng Pan</h1>
       <a id="menu">
         &#9776; Menu
       </a>
@@ -46,17 +46,17 @@
         <nav id="main-nav" class="main-nav nav-left">
     
     
-      <a class="main-nav-link" href="https://jackieanxis.github.io">Home</a>
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io">Home</a>
     
-      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-frontend">FrontEnd</a>
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-frontend">FrontEnd</a>
     
-      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-cs229">MLcs229</a>
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-cs229">MLcs229</a>
     
-      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-papers">PaperReading</a>
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-papers">PaperReading</a>
     
       <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
     
-      <a class="main-nav-link" href="https://jackieanxis.github.io/blog-others">Others</a>
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-others">Others</a>
     
       <a class="main-nav-link" href="/blog-cs229/about">About</a>
     
@@ -79,7 +79,7 @@
     
     <div class="article-entry typo" itemprop="articleBody">
       
-        <p><strong>最优间隔分类器</strong>（<em>Optimal Margin Classifier</em>）。其目标是使得最小几何间隔最大化（<a href="https://jackieanxis.github.io/blog-cs229/2018/07/02/10.%20SVM%EF%BC%88%E4%B8%80%EF%BC%89%E6%A6%82%E5%BF%B5/">10. SVM（一）概念</a>）：<br>$$<br>\text{目标(1):} \\<br>\max_{w, b} \gamma \\<br>\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1,\ldots,n<br>$$<br>我们知道，$\hat{\gamma} = \frac{\gamma}{||w||}$，所以上面的目标可以等同于：<br>$$<br>\text{目标(2):} \\<br>\max_{w, b} \frac{\hat{\gamma}}{||w||} \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq \hat{\gamma}, i=1,\ldots,n<br>$$<br>为了最大化上述值，我们有两种策略。</p>
+        <p><strong>最优间隔分类器</strong>（<em>Optimal Margin Classifier</em>）。其目标是使得最小几何间隔最大化（<a href="https://jackieanxis.github.io/blog-cs229/2018/07/02/10.%20SVM%EF%BC%88%E4%B8%80%EF%BC%89%E6%A6%82%E5%BF%B5/" target="_blank" rel="external">10. SVM（一）概念</a>）：<br>$$<br>\text{目标(1):} \\<br>\max_{w, b} \gamma \\<br>\text{ s.t. } y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma, i=1,\ldots,n<br>$$<br>我们知道，$\hat{\gamma} = \frac{\gamma}{||w||}$，所以上面的目标可以等同于：<br>$$<br>\text{目标(2):} \\<br>\max_{w, b} \frac{\hat{\gamma}}{||w||} \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq \hat{\gamma}, i=1,\ldots,n<br>$$<br>为了最大化上述值，我们有两种策略。</p>
 <ol>
 <li>增大$\hat{\gamma}$</li>
 <li>减小$||w||$</li>
