@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>15. Vapnik–Chervonenkis dimension | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="延续上节课的内容。 给定$|\cal H| = k$，给定$\delta, \gamma$，为了保证：$$\varepsilon({\hat h}) \leq \varepsilon(h) + 2\gamma$$的概率不小于$1-\delta$，那么$m$需要满足：$$m \geq \frac{1}{2\gamma^2}\log \frac{2k}{\delta} = O(\frac{1}{\ga">
+<meta name="keywords" content="VC维,特征选择">
+<meta property="og:type" content="article">
+<meta property="og:title" content="15. Vapnik–Chervonenkis dimension">
+<meta property="og:url" content="https://jiacheng-pan.github.io/2019/01/10/15. Vapnik-Chervonenkis Dimension/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="延续上节课的内容。 给定$|\cal H| = k$，给定$\delta, \gamma$，为了保证：$$\varepsilon({\hat h}) \leq \varepsilon(h) + 2\gamma$$的概率不小于$1-\delta$，那么$m$需要满足：$$m \geq \frac{1}{2\gamma^2}\log \frac{2k}{\delta} = O(\frac{1}{\ga">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/19-1-11/image-20190111094049430.png">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/19-1-11/image-20190111094649618.png">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/19-1-11/image-20190111095306079.png">
+<meta property="og:updated_time" content="2019-01-11T04:37:59.094Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="15. Vapnik–Chervonenkis dimension">
+<meta name="twitter:description" content="延续上节课的内容。 给定$|\cal H| = k$，给定$\delta, \gamma$，为了保证：$$\varepsilon({\hat h}) \leq \varepsilon(h) + 2\gamma$$的概率不小于$1-\delta$，那么$m$需要满足：$$m \geq \frac{1}{2\gamma^2}\log \frac{2k}{\delta} = O(\frac{1}{\ga">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/19-1-11/image-20190111094049430.png">
+  
+  
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-15. Vapnik-Chervonenkis Dimension" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jiacheng Pan</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/">Home</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-frontend/">FrontEnd</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-cs229/">MLcs229</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-papers/">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-others/">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      15. Vapnik–Chervonenkis dimension
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>延续上节课的内容。</p>
+<p>给定$|\cal H| = k$，给定$\delta, \gamma$，为了保证：<br>$$<br>\varepsilon({\hat h}) \leq \varepsilon(h) + 2\gamma<br>$$<br>的概率不小于$1-\delta$，那么$m$需要满足：<br>$$<br>m \geq \frac{1}{2\gamma^2}\log \frac{2k}{\delta} = O(\frac{1}{\gamma^2}\log \frac{k}{\delta})<br>$$</p>
+<p>假如$\cal H$是以$d$个实数为参数的(比如为了解决<em>n</em>个特征的分类问题，<em>d</em>就等于<em>n+1</em>)，而在计算机中，实数多以64位浮点数保存，d个实数就需要64d位来存储，那么$\cal H$的整个假设空间大小就为$2^{64d}$，也即$k=2^{64d}$，那么：<br>$$<br>m \geq O(\frac{1}{\gamma^2}\log \frac{k}{\delta}) = O(\frac{d}{\gamma^2}\log \frac{1}{\delta})<br>$$<br>最直观的解释就是$m$与假设类的参数数量几乎是成正比的。</p>
+<hr>
+<p>定义<strong>Shatter（分散）</strong>：给定一个由$d$个点构成的集合：$S=\lbrace x^{(1)}, \ldots, x^{(d)} \rbrace$，我们说一个假设类$\cal H$能够<strong>分散(shatter)</strong>一个集合$S$，如果$\cal H$能够实现对$S$的任意一种标记方式，也即，对$S$的任意一种标记方式，我们都可以从$\cal H$中找到对应的假设来进行分割。<br>举例而言，如果${\cal H} = \lbrace \text{linear classification in 2D} \rbrace$(二维线性分类器的集合)，对于二维平面上的三个点，有8种标记方式：</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/19-1-11/image-20190111094049430.png" alt="image-20190111094049430"></p>
+<p>那么，蓝线所代表的线性分类器，都能完成对它们的标记，所以我们称$\cal H$能够分散平面上三个点所构成的集合。但是对于平面上四个点，就有存在以下这种情况，没有任何的线性分类器能够实现这种标记：</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/19-1-11/image-20190111094649618.png" alt="image-20190111094649618"></p>
+<hr>
+<p>定义<strong>Vapnik-Chervonenkis dimension（VC维）</strong>：假设集$\cal H$的<strong>VC维</strong>，写成$VC({\cal H})$，指的是能够被$\cal H$分散的最大集合的大小。<br>举例而言，如果$\cal H$是所有二维线性分类器构成的集合，那么$VC(\cal H) = 3$。当然并不是说$\cal H$要能分散所有三个点构成的集合，只要有某个三个点构成的集合能被$\cal H$分散即可，比如下面这种标记方式，$\cal H$就无法实现，但是我们还是称$VC(\cal H) = 3$。</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/19-1-11/image-20190111095306079.png" alt="image-20190111095306079"></p>
+<p>有一个推论：</p>
+<p>$VC({\text{linear classification of n D}}) = n + 1$</p>
+<hr>
+<p>定理：给定假设集合$\cal H$，令$VC({\cal H})=d$，那么，对于任意的$h \in {\cal H}$：<br>$$<br>|\varepsilon(h)-{\hat \varepsilon}(h)| \leq O(\sqrt{\frac{d}{m} \log \frac{m}{d} + \frac{1}{m} \log \frac{1}{\delta}})<br>$$<br>的概率不小于$1 - \delta$，以及<br>$$<br>\varepsilon({\hat h}) \leq \varepsilon(h^\ast) + 2 \gamma, \gamma = O(\sqrt{\frac{d}{m} \log \frac{m}{d} + \frac{1}{m} \log \frac{1}{\delta}})<br>$$<br>的概率不小于$1-\delta​$。</p>
+<p>引理：为了保证$\varepsilon({\hat h}) \leq \varepsilon(h ^ \ast) + 2 \gamma$至少在$1 - \delta$的概率下成立，应该满足：<br>$$<br>m = O_{\gamma, \delta}(d)<br>$$<br>$O_{\gamma, \delta}(d)$指的是，在固定$\gamma, \delta$的情况下，与$d$线性相关。</p>
+<p>也即，$m$必须与$\cal H$的VC维保持一致，也可以这么理解，为了使泛化误差和训练误差近似，训练样本数目必须和模型的参数数量成正比。</p>
+<hr>
+<p>在SVM中，给定数据集，如果我们只考虑半径R以内的点，以及间隔至少为$\gamma$的线性分类器构成的假设类，那么：<br>$$<br>VC({\cal H}) \leq \lceil \frac{R^2}{4\gamma^2} \rceil + 1<br>$$</p>
+<p>也就说明，$\cal H​$ 的VC维上限，并不依赖于数据集中点$x​$的维度，换句话说，虽然点可能位于无限维的空间中，但是如果只考虑那些具有较大函数间隔的分类器所组成的假设类，那么VC维就存在上界。</p>
+<p>所以SVM会自动尝试找到一个具有较小VC维的假设类，所以它不会过拟合（模型参数不会过大）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2019/01/10/15. Vapnik-Chervonenkis Dimension/" class="article-date">
+  <time datetime="2019-01-10T05:53:00.000Z" itemprop="datePublished">2019-01-10</time>
+</a>
+
+        </li>
+        
+          <li>
+            <span class="label">Category:</span>
+            
+  <div class="article-category">
+    <a class="article-category-link" href="/blog-cs229/categories/VC维/">VC维</a>
+  </div>
+
+
+          </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/VC维/">VC维</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/特征选择/">特征选择</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
+  
+  
+    <a href="/blog-cs229/2019/01/05/14. 经验风险最小化/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">14. 经验风险最小化</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
