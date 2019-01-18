@@ -6,7 +6,7 @@
   <title>15. Vapnik–Chervonenkis dimension | Machine Learning | cs229</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="延续上节课的内容。 给定$|\cal H| = k$，给定$\delta, \gamma$，为了保证：$$\varepsilon({\hat h}) \leq \varepsilon(h) + 2\gamma$$的概率不小于$1-\delta$，那么$m$需要满足：$$m \geq \frac{1}{2\gamma^2}\log \frac{2k}{\delta} = O(\frac{1}{\ga">
-<meta name="keywords" content="VC维,特征选择">
+<meta name="keywords" content="特征选择,VC维">
 <meta property="og:type" content="article">
 <meta property="og:title" content="15. Vapnik–Chervonenkis dimension">
 <meta property="og:url" content="https://jiacheng-pan.github.io/2019/01/10/15. Vapnik-Chervonenkis Dimension/index.html">
@@ -142,7 +142,14 @@
     
 <nav id="article-nav" class="article-nav">
   
-    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
+    <a href="/blog-cs229/2019/01/18/16. 模型选择/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          16. 模型选择和特征选择
+        
+      </div>
+    </a>
   
   
     <a href="/blog-cs229/2019/01/05/14. 经验风险最小化/" id="article-nav-older" class="article-nav-link-wrap older">
@@ -198,22 +205,7 @@
 
 
 
-    </div>
-  <script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+    </div><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config("");
 </script>
@@ -231,5 +223,5 @@
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
-</body>
+  </body>
 </html>
