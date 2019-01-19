@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>1. 监督学习&amp;梯度下降法 | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="监督学习符号定义：   符号 意义     $m$ 训练集包含的数据个数   $x$ 输入变量/特征（feature）   $y$ 输出变量/目标（target）   $(x, y)$ 一个训连样本   $(x^{(i)}, y^{(i)})$ 第i个训练样本    监督学习的主要流程： 线性回归以预测房价为例，我们的目标是导出一个函数（即假设），根据房子的特征（比如大小、卧室数量等等）来预测房">
+<meta name="keywords" content="机器学习,梯度下降,监督学习">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1. 监督学习&amp;梯度下降法">
+<meta property="og:url" content="https://jiacheng-pan.github.io/2018/06/03/01-监督学习&梯度下降法/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="监督学习符号定义：   符号 意义     $m$ 训练集包含的数据个数   $x$ 输入变量/特征（feature）   $y$ 输出变量/目标（target）   $(x, y)$ 一个训连样本   $(x^{(i)}, y^{(i)})$ 第i个训练样本    监督学习的主要流程： 线性回归以预测房价为例，我们的目标是导出一个函数（即假设），根据房子的特征（比如大小、卧室数量等等）来预测房">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/4328727.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/2339619.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/49403960.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/85884341.jpg">
+<meta property="og:updated_time" content="2019-01-19T05:19:01.171Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1. 监督学习&amp;梯度下降法">
+<meta name="twitter:description" content="监督学习符号定义：   符号 意义     $m$ 训练集包含的数据个数   $x$ 输入变量/特征（feature）   $y$ 输出变量/目标（target）   $(x, y)$ 一个训连样本   $(x^{(i)}, y^{(i)})$ 第i个训练样本    监督学习的主要流程： 线性回归以预测房价为例，我们的目标是导出一个函数（即假设），根据房子的特征（比如大小、卧室数量等等）来预测房">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/4328727.jpg">
+  
+  
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-01-监督学习&amp;梯度下降法" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jiacheng Pan</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/">Home</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-frontend/">FrontEnd</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-cs229/">MLcs229</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-papers/">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-others/">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1. 监督学习&amp;梯度下降法
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <h2 id="监督学习"><a href="#监督学习" class="headerlink" title="监督学习"></a>监督学习</h2><h3 id="符号定义："><a href="#符号定义：" class="headerlink" title="符号定义："></a>符号定义：</h3><table>
+<thead>
+<tr>
+<th>符号</th>
+<th>意义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>$m$</td>
+<td>训练集包含的数据个数</td>
+</tr>
+<tr>
+<td>$x$</td>
+<td>输入变量/特征（feature）</td>
+</tr>
+<tr>
+<td>$y$</td>
+<td>输出变量/目标（target）</td>
+</tr>
+<tr>
+<td>$(x, y)$</td>
+<td>一个训连样本</td>
+</tr>
+<tr>
+<td>$(x^{(i)}, y^{(i)})$</td>
+<td>第i个训练样本</td>
+</tr>
+</tbody>
+</table>
+<h3 id="监督学习的主要流程："><a href="#监督学习的主要流程：" class="headerlink" title="监督学习的主要流程："></a>监督学习的主要流程：</h3><p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/4328727.jpg" alt=""></p>
+<h3 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h3><p>以预测房价为例，我们的目标是导出一个函数（即假设），根据房子的特征（比如大小、卧室数量等等）来预测房价，那么：</p>
+<ul>
+<li>输入（特征）：$x_1, x_2, …$（比如大小、卧室数量等等）</li>
+<li>输出（目标）：$y$（房价）</li>
+<li><p>假设：$h(x)=h_{\theta}(x)=\theta_0+\theta_1x_1+\theta_2x_2+…+\theta_nx_n$，用于预测房价，其中$\theta_i$是参数，$n$是特征数量</p>
+<p>为了方便，可以将假设写成：$h(x)=\sum_{i=0}^n\theta_ix_i=\theta^Tx​$</p>
+</li>
+</ul>
+<p>此时，学习函数（Learning Algorithm）的目标就是找到合适的参数$\theta$，使之能够导出『合理』的假设$h(x)$，这里我们将『合理』理解为：$h_\theta(x)$（假设）和$y$（目标）之间的差距最小，也即：</p>
+<p>$$<br>\displaystyle \min_{\theta}\frac{1}{2}\sum_{i=1}^m(h_\theta(x)^{(i)}-y_{(i)})^2<br>$$<br>这里的$\frac{1}{2}$是为了简化之后的计算。</p>
+<p>我们定义$$\displaystyle J(\theta)=\frac{1}{2}\sum_{i=1}^m(h_\theta(x)^{(i)}-y_{(i)})^2$$，那么我们的目标就是去选取合适的$\theta$，以最小化$J(\theta)$。</p>
+<h2 id="梯度下降法"><a href="#梯度下降法" class="headerlink" title="梯度下降法"></a>梯度下降法</h2><h3 id="搜索算法（梯度下降）"><a href="#搜索算法（梯度下降）" class="headerlink" title="搜索算法（梯度下降）"></a>搜索算法（梯度下降）</h3><p>目的：不断改变$\theta$，从而来减少$J(\theta)$。</p>
+<p>原理：每次都往下降最快的地方走，从而找到一个局部最优解。</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/2339619.jpg" alt=""></p>
+<p>一般会初始化$\vec{\theta}=\vec{0}$，然后每次都沿着梯度方向走，以保证每次都往下降最快的地方走：<br>$$<br>\displaystyle \theta_i:=\theta_i - \alpha\frac{\partial}{\partial \theta_i}J(\theta)<br>$$<br>其中，$:=$表示赋值操作，$\alpha$为步长。</p>
+<p>对于某个训练样本$(x, y)$<br>$$\displaystyle \frac{\partial}{\partial \theta_i}J(\theta) = \frac{\partial}{\partial \theta_i}(\frac{1}{2}(h_\theta(x)-y)^2)$$<br>    $$\displaystyle = 2 \times \frac{1}{2}(h_\theta(x)-y)\frac{\partial}{\partial \theta_i}(h_\theta(x)-y)$$<br>    $$\displaystyle = (h_\theta(x)-y)\frac{\partial}{\partial \theta_i}(\theta_0x_0+…+\theta_nx_n-y)$$<br>    $$\displaystyle =(h_\theta(x)-y) \times x_i$$</p>
+<p>那么，$\theta_i:=\theta_i - \alpha (h_\theta(x)-y) \times x_i$</p>
+<h3 id="批量梯度下降法（Batch-Gradient-Descent）"><a href="#批量梯度下降法（Batch-Gradient-Descent）" class="headerlink" title="批量梯度下降法（Batch Gradient Descent）"></a>批量梯度下降法（Batch Gradient Descent）</h3><p>批量梯度下降法，使用的是所有训练样本的平均梯度：</p>
+<p>$$<br>\displaystyle \theta_i:=\theta_i - \alpha \frac{1}{m} \sum_{j=1}^m(h_\theta(x^{(j)})-y^{(j)}) \times x_i^{(j)}<br>$$</p>
+<p>但每次下降都需要遍历所有样本，效率较低，具体过程可能如下：</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/49403960.jpg" alt=""></p>
+<h3 id="随机梯度下降法（Stochastic-Gradient-Descent）"><a href="#随机梯度下降法（Stochastic-Gradient-Descent）" class="headerlink" title="随机梯度下降法（Stochastic Gradient Descent）"></a>随机梯度下降法（Stochastic Gradient Descent）</h3><p>又称为『增量梯度下降法』</p>
+<p>对每个样本$(x_{(j)}, y_{(j)})$进行：<br>$$<br>\displaystyle \theta_i:=\theta_i - \alpha (h_\theta(x^{(j)})-y^{(j)}) \times x_i^{(j)}<br>$$</p>
+<p>直到收敛</p>
+<p>这时，每次梯度下降只遍历一个样本，具体过程可能如下：</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-6-3/85884341.jpg" alt=""></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2018/06/03/01-监督学习&梯度下降法/" class="article-date">
+  <time datetime="2018-06-03T06:29:00.000Z" itemprop="datePublished">2018-06-03</time>
+</a>
+
+        </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/机器学习/">机器学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/梯度下降/">梯度下降</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/监督学习/">监督学习</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/blog-cs229/2018/06/03/02-线性回归/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          2. 线性回归
+        
+      </div>
+    </a>
+  
+  
+    <span id="article-nav-older" class="article-nav-link-wrap older"></span>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>12. SVM（三）核函数 | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在SVM(二)中，我们看到了如下的表示形式：$$W(\alpha)=\sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)$$这里，内积$(x_i \cdot x_j)$就是最简单的核函数的形式。一般核函数会被写成$\langle x^{(i)}, x^{(j)} \rangle">
+<meta name="keywords" content="机器学习,SVM,核函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="12. SVM（三）核函数">
+<meta property="og:url" content="https://jiacheng-pan.github.io/2018/07/22/12-SVM（三）核函数/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="在SVM(二)中，我们看到了如下的表示形式：$$W(\alpha)=\sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)$$这里，内积$(x_i \cdot x_j)$就是最简单的核函数的形式。一般核函数会被写成$\langle x^{(i)}, x^{(j)} \rangle">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-23/7489488.jpg">
+<meta property="og:updated_time" content="2019-01-19T05:20:12.875Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="12. SVM（三）核函数">
+<meta name="twitter:description" content="在SVM(二)中，我们看到了如下的表示形式：$$W(\alpha)=\sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)$$这里，内积$(x_i \cdot x_j)$就是最简单的核函数的形式。一般核函数会被写成$\langle x^{(i)}, x^{(j)} \rangle">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-23/7489488.jpg">
+  
+  
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-12-SVM（三）核函数" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jiacheng Pan</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/">Home</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-frontend/">FrontEnd</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-cs229/">MLcs229</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-papers/">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-others/">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      12. SVM（三）核函数
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p>在SVM(二)中，我们看到了如下的表示形式：<br>$$<br>W(\alpha)=\sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j(x_i \cdot x_j)<br>$$<br>这里，内积$(x_i \cdot x_j)$就是最简单的核函数的形式。一般核函数会被写成$\langle x^{(i)}, x^{(j)} \rangle$的形式。</p>
+<p>有时候，我们会将一些特征转换到高维空间上，就像我们在之前的<a href="https://jackieanxis.github.io/blog-cs229/2018/06/04/3.%20%E8%BF%87%E6%8B%9F%E5%90%88&amp;%E5%B1%80%E9%83%A8%E5%8A%A0%E6%9D%83%E5%9B%9E%E5%BD%92/" target="_blank" rel="external">3. 过拟合&amp;局部加权回归</a>中提到的，比如特征$x$表示的是房屋面积，我们需要预测房子是否会在6个月内被卖出，我们有时候会将这个特征映射成如下的形式：<br>$$<br>x \rightarrow \begin{bmatrix}<br>x \\<br>x^2 \\<br>x^3 \\<br>x^4<br>\end{bmatrix} = \phi(x)<br>$$<br>原先的特征的内积形式$\langle x^{(i)}, x^{(j)} \rangle$会被写成$\langle \phi(x^{(i)}), \phi(x^{(j)}) \rangle$，而且往往$\phi(x)$会有很高的维度。因为在很多情况下，计算$\phi(x)$会有很高的代价，或者表示$\phi(x)$需要很高的代价，但是光是计算内核则可能代价较小。</p>
+<p>比如：假如有两个输入：$x, z \in \Bbb R^n$，核函数被定义为：<br>$$<br>\begin{align}<br>k(x, z) = (x^T z)^2 &amp;= (\sum_{i=1}^nx_iz_i)(\sum_{j=1}^nx_jz_j) \\<br>&amp;=\sum_{i=1}^n\sum_{j=1}^n(x_ix_j)(z_iz_j) \\<br>&amp;= \phi(x)^T\phi(z)<br>\end{align}<br>$$<br>假如需要表示成高维向量，那么$\phi(x)$是一个$n \times n$维的向量，如果$n = 3$：<br>$$<br>\phi(x) = \begin{bmatrix}<br>x_1x_1 \\<br>x_1x_2 \\<br>x_1x_3 \\<br>x_2x_1 \\<br>\vdots \\<br>x_3x_3<br>\end{bmatrix}<br>$$<br>所以，计算$\phi(x)$的时间复杂度就达到了$O(n^2)$，而计算核函数仅仅需要计算$x^Tz$，复杂度为$O(n)$。</p>
+<p>接下去我们为这个核函数增加常数项：<br>$$<br>k(x,z)=(x^Tz+c)^2<br>$$<br>那么：<br>$$<br>\phi(x) = \begin{bmatrix}<br>x_1x_1 \\<br>x_1x_2 \\<br>x_1x_3 \\<br>x_2x_1 \\<br>\vdots \\<br>x_3x_3 \\<br>\sqrt{2c}x_1 \\<br>\sqrt{2c}x_2 \\<br>\sqrt{2c}x_3 \\<br>c<br>\end{bmatrix}<br>$$<br>更一般的：<br>$$<br>k(x, z)=(x^Tz+c)^d<br>$$</p>
+<p>有了核函数，即可替换SVM中的内积$\langle x^{(i)}, x^{(j)} \rangle$，比如常用的高斯核：<br>$$<br>k(x,z)=\exp(-\frac{||x-z||^2}{2\sigma^2})<br>$$<br>有了核函数，相当于把数据从原始空间转换到了高位空间，很多数据，在一维空间往往是线性不可分的，但是到了高维空间会变成可分的：</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-23/7489488.jpg" alt=""></p>
+<h2 id="核函数的合法性"><a href="#核函数的合法性" class="headerlink" title="核函数的合法性"></a>核函数的合法性</h2><p>如何判断一个核函数是合法的呢？判断依据是：是否存在函数$\phi$，使得$k(x,z)$能够被写成$\langle \phi(x), \phi(z) \rangle$。</p>
+<blockquote>
+<p><strong>定理</strong>：如果核函数合法，那么其对应的核矩阵（kernel matrix）是半正定的。</p>
+</blockquote>
+<p>核矩阵指的是矩阵$K \in \Bbb R^{m\times m}$，其中$K_{ij}=k(x^{(i)}, x^{(j)})$。半正定的意思是，对于任意向量$z$，都存在$z^TKz \geq 0$，证明如下：<br>$$<br>\begin{align}<br>z^TKz &amp;= \sum_i\sum_jz_iK_{ij}z_j \\<br>&amp;= \sum_i\sum_jz_i\phi_(x^{(i)})^T\phi_(x^{(j)})z_j \\<br>&amp;= \sum_i\sum_jz_i\cdot \sum_k\phi_(x^{(i)})_k\underbrace{\phi_(x^{(j)})_k}_{向量第k项} \cdot z_j \\<br>&amp;= \sum_k\sum_i\sum_jz_i\cdot \phi_(x^{(i)})_k\phi_(x^{(j)})_k \cdot z_j \\<br>&amp;= \sum_k(\sum_iz_i\phi(x^{(i)}))^2 \geq 0<br>\end{align}<br>$$<br>事实上，上面的定理的逆命题也一样成立，总结起来：</p>
+<blockquote>
+<p><strong>Merce定理</strong>：给定核函数$k(x, z)$，那么$k(x, z)$合法（也即$\exists \phi, k(x,z)=\phi(x)^T\phi(z)$），当且仅当，对所有的$\lbrace x^{(1)}, \ldots, x^{(m)} \rbrace$，核矩阵$K \in \Bbb R^{m\times m}$是一个对称的半正定矩阵。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2018/07/22/12-SVM（三）核函数/" class="article-date">
+  <time datetime="2018-07-22T13:33:00.000Z" itemprop="datePublished">2018-07-22</time>
+</a>
+
+        </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/SVM/">SVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/机器学习/">机器学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/核函数/">核函数</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/blog-cs229/2018/07/25/13-SVM（四）非线性决策边界/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          13. SVM（四）非线性决策边界
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog-cs229/2018/07/03/11-SVM（二）最优间隔分类器/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">11. SVM（二）最优间隔分类器</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

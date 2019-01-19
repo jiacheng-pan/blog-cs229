@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>13. SVM（四）非线性决策边界 | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="当数据中存在异常点时，比如上述的情况，导致原先可以用直线a分割的数据现在不得不用b来进行，以保证完美的分割。由此我们引出了非线性决策边界（non-linear decision boundaries）来解决这样的问题。 观察原SVM问题的目标：$$\min_{w, b} \frac{1}{2}||w|^2 \\\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i">
+<meta name="keywords" content="机器学习,SVM,非线性决策边界,坐标上升法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="13. SVM（四）非线性决策边界">
+<meta property="og:url" content="https://jiacheng-pan.github.io/2018/07/25/13-SVM（四）非线性决策边界/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="当数据中存在异常点时，比如上述的情况，导致原先可以用直线a分割的数据现在不得不用b来进行，以保证完美的分割。由此我们引出了非线性决策边界（non-linear decision boundaries）来解决这样的问题。 观察原SVM问题的目标：$$\min_{w, b} \frac{1}{2}||w|^2 \\\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-25/83102162.jpg">
+<meta property="og:image" content="http://s3.sinaimg.cn/middle/b09d46024e1a2f5cf49c2&690">
+<meta property="og:updated_time" content="2019-01-19T05:20:15.814Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="13. SVM（四）非线性决策边界">
+<meta name="twitter:description" content="当数据中存在异常点时，比如上述的情况，导致原先可以用直线a分割的数据现在不得不用b来进行，以保证完美的分割。由此我们引出了非线性决策边界（non-linear decision boundaries）来解决这样的问题。 观察原SVM问题的目标：$$\min_{w, b} \frac{1}{2}||w|^2 \\\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-25/83102162.jpg">
+  
+  
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-13-SVM（四）非线性决策边界" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jiacheng Pan</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/">Home</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-frontend/">FrontEnd</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-cs229/">MLcs229</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-papers/">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-others/">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      13. SVM（四）非线性决策边界
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-25/83102162.jpg" alt=""></p>
+<p>当数据中存在异常点时，比如上述的情况，导致原先可以用直线a分割的数据现在不得不用b来进行，以保证完美的分割。由此我们引出了<strong>非线性决策边界</strong>（<em>non-linear decision boundaries</em>）来解决这样的问题。</p>
+<p>观察原SVM问题的目标：<br>$$<br>\min_{w, b} \frac{1}{2}||w|^2 \\<br>\text{ s.t. }y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1, i=1,\ldots,m<br>$$<br>我们为原公式增加惩罚项，对不同的数据点增加不同的惩罚，使得所有样本能够更好地分割：<br>$$<br>\min_{w, b} \frac{1}{2}||w|^2+c\sum_{i=1}^m\xi_i, \xi_i\geq0<br>$$<br>使得<br>$$<br>y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1-\xi_i, i=1,\ldots,m<br>$$<br>注意到，我们之前认为$ y^{(i)} \cdot (w^T \cdot x^{(i)}+b) \geq 1 $是分类正确的，在这里我们允许一部分样本小于1，也就是说明我们允许了一部分样本分类错误。</p>
+<p>构建拉格朗日算子：<br>$$<br>{\cal L}(w, b, \xi, \alpha, \gamma) = \frac{1}{2}||w|^2+c\sum_i\xi_i-\sum_i^m\alpha_i(y^{(i)} (w^T \cdot x^{(i)}+b)-1+\xi_i)-\sum_i^m\gamma_i\xi_i<br>$$<br>对偶：<br>$$<br>\max W(\alpha) = \sum_{i=1}\alpha_i-\frac{1}{2}\sum_{i=1}\sum_{j=1}\alpha_i\alpha_jy_iy_j\langle x_i \cdot x_j \rangle<br>$$<br>跟原先的SVM问题的唯一区别在于其限制条件为：<br>$$<br>\sum_{i=1}^my^{(i)}\alpha_i=0 \\<br>0 \leq \alpha_i \leq c<br>$$<br>其收敛条件：</p>
+<ul>
+<li><p>对于大部分数据点：</p>
+<p>$$<br>\alpha_i=0 \Rightarrow y^{(i)} (w^T \cdot x^{(i)}+b) \geq 1<br>$$</p>
+</li>
+<li><p>对于异常点：</p>
+<p>$$<br>\alpha_i = c<br>$$</p>
+</li>
+<li><p>对于最近点：</p>
+<p>$$<br>0&lt;\alpha_i&lt;c<br>$$</p>
+</li>
+</ul>
+<h3 id="坐标上升法（Coordinate-Ascent）"><a href="#坐标上升法（Coordinate-Ascent）" class="headerlink" title="坐标上升法（Coordinate Ascent）"></a>坐标上升法（Coordinate Ascent）</h3><p>考虑优化问题：<br>$$<br>\max W(\alpha_1, \alpha_2, …, \alpha_m)<br>$$<br>不考虑约束条件，</p>
+<p>重复 {</p>
+<p>​    For i = 1 to m:<br>$$<br>\alpha_i := \arg \max_{\hat{\alpha}_i} W(\alpha_1,\ldots,{\hat{\alpha}}_i,\ldots,\alpha_m)<br>$$<br>} 直到收敛；</p>
+<p>这个算法，可以认为是执行了以下这个过程（以m=2为例）：</p>
+<p><img src="http://s3.sinaimg.cn/middle/b09d46024e1a2f5cf49c2&amp;690" alt="坐标上升法，不断沿着坐标轴方向前进"></p>
+<h3 id="顺序最小优化算法（Sequential-minimal-optimization-SMO）"><a href="#顺序最小优化算法（Sequential-minimal-optimization-SMO）" class="headerlink" title="顺序最小优化算法（Sequential minimal optimization, SMO）"></a>顺序最小优化算法（Sequential minimal optimization, SMO）</h3><p>顺序最小优化算法的基本理念就是在坐标上升法的基础上，改成一次性优化其中两个$\alpha$，而固定其他的$m-2$个$\alpha$。</p>
+<p>假如我们更新$\alpha_1, \alpha_2$：</p>
+<p>因为在之前我们提到:<br>$$<br>\sum_i^m \alpha_iy^{(i)}=0<br>$$<br>于是有：<br>$$<br>\alpha_1 y^{(1)}+\alpha_2 y^{(2)} = -\sum_{i=3}^m\alpha_iy^{(i)}= \zeta<br>$$<br>那么<br>$$<br>\alpha_1=\frac{\zeta-\alpha_2y^{(2)}}{y^{(1)}}<br>$$</p>
+<p>$$<br>W(\alpha_1, \alpha_2, …, \alpha_m) = W(\frac{\zeta-\alpha_2y^{(2)}}{y^{(1)}}, \alpha_2, …, \alpha_m)<br>$$</p>
+<p>在非线性决策边界优化问题中，其实$W$是一个关于$\alpha_i$的二次函数，固定其他$\alpha$之后，$W$函数就可以被简化为：<br>$$<br>a\alpha_2^2+b \alpha_2 + c<br>$$<br>很容易就能求解。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2018/07/25/13-SVM（四）非线性决策边界/" class="article-date">
+  <time datetime="2018-07-25T05:53:00.000Z" itemprop="datePublished">2018-07-25</time>
+</a>
+
+        </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/SVM/">SVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/坐标上升法/">坐标上升法</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/机器学习/">机器学习</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/非线性决策边界/">非线性决策边界</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/blog-cs229/2019/01/05/14-经验风险最小化/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          14. 经验风险最小化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog-cs229/2018/07/22/12-SVM（三）核函数/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">12. SVM（三）核函数</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>

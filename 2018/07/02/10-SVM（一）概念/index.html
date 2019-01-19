@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+  
+  <title>10. SVM（一）概念 | Machine Learning | cs229</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="SVM，指的是支持向量机（support vector machines）。 支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：  但是很明显，上图中虽然a, c都对数据进行了有效的分割。但很明显，都不如b分割的好。 我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确">
+<meta name="keywords" content="机器学习,SVM,函数间隔,几何间隔">
+<meta property="og:type" content="article">
+<meta property="og:title" content="10. SVM（一）概念">
+<meta property="og:url" content="https://jiacheng-pan.github.io/2018/07/02/10-SVM（一）概念/index.html">
+<meta property="og:site_name" content="Machine Learning | cs229">
+<meta property="og:description" content="SVM，指的是支持向量机（support vector machines）。 支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：  但是很明显，上图中虽然a, c都对数据进行了有效的分割。但很明显，都不如b分割的好。 我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确">
+<meta property="og:locale" content="Chinese">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/83131877.jpg">
+<meta property="og:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/34659777.jpg">
+<meta property="og:updated_time" content="2019-01-19T05:20:06.667Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="10. SVM（一）概念">
+<meta name="twitter:description" content="SVM，指的是支持向量机（support vector machines）。 支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：  但是很明显，上图中虽然a, c都对数据进行了有效的分割。但很明显，都不如b分割的好。 我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确">
+<meta name="twitter:image" content="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/83131877.jpg">
+  
+  
+    <link rel="icon" href="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/avatar.png">
+  
+  <link rel="stylesheet" href="/blog-cs229/css/typing.css">
+  <link rel="stylesheet" href="/blog-cs229/css/donate.css"><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+</head>
+
+  
+    
+      <body>
+    
+  
+      <!-- hexo-inject:begin --><!-- hexo-inject:end --><div id="container" class="container">
+        <article id="post-10-SVM（一）概念" class="article article-type-post" itemscope itemprop="blogPost">
+  <header id="header" class="header">
+    <div class="mobile-nav">
+      <h1 class="nickname">Jiacheng Pan</h1>
+      <a id="menu">
+        &#9776; Menu
+      </a>
+    </div>
+    
+        <nav id="main-nav" class="main-nav nav-left">
+    
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/">Home</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-frontend/">FrontEnd</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-cs229/">MLcs229</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-papers/">PaperReading</a>
+    
+      <a class="main-nav-link" href="https://github.com/JackieAnxis">Github</a>
+    
+      <a class="main-nav-link" href="https://jiacheng-pan.github.io/blog-others/">Others</a>
+    
+      <a class="main-nav-link" href="/blog-cs229/about">About</a>
+    
+  </nav>
+</header>
+
+  <hr/>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      10. SVM（一）概念
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry typo" itemprop="articleBody">
+      
+        <p><em>SVM</em>，指的是支持向量机（<em>support vector machines</em>）。</p>
+<p>支持向量机，假设数据是线性可分的，那么我们就能找到一个超平面，将数据分成两类。但是一旦线性可分，我们就可能找到无数的超平面，都可以将数据分成两类：</p>
+<p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/83131877.jpg" alt=""></p>
+<p>但是很明显，上图中虽然<em>a, c</em>都对数据进行了有效的分割。但很明显，都不如<em>b</em>分割的好。</p>
+<p>我们可以用“间隔”这个概念来定义这个超平面（在二维上是线）对数据的分割优劣。在分类正确的情况下，间隔越大，我们认为对数据的分类越好。</p>
+<p>我们的目标是得到数据的分类：$y \in \lbrace -1, +1 \rbrace$。</p>
+<p>这个超平面，则可以表示成$w^Tx+b$，其中$w=[\theta_1, \ldots, \theta_n]^T, b=\theta_0$。这个超平面可以表达成一个$n+1$维向量。</p>
+<p>判别函数：<br>$$<br>g(z)=\begin{cases}<br>+1, &amp; \text{如果$z\geq0$} \\<br>-1, &amp; \text{otherwise}<br>\end{cases}<br>$$<br>假设则可以表示成：$h_{w,b}(x)=g(w^Tx+b)$</p>
+<h2 id="间隔"><a href="#间隔" class="headerlink" title="间隔"></a>间隔</h2><h3 id="函数间隔（functional-margin）"><a href="#函数间隔（functional-margin）" class="headerlink" title="函数间隔（functional margin）"></a>函数间隔（functional margin）</h3><p>某个超平面$(w,b)$和训练样本$(x^{(i)}, y^{(i)})$之间的函数间隔被表示成：<br>$$<br>\hat{\gamma}^{(i)}=y^{(i)}(w^Tx^{(i)}+b)<br>$$<br>于是，我们可以知道：</p>
+<ol>
+<li>当$y^{(i)}=1$，于是我们想获得更大的函数间隔（这是我们的目标），就需要使得$w^Tx^{(i)}+b \gg 0$</li>
+<li>相反，当$y^{(i)}=-1$，我们想获得更大的函数间隔，就需要使得$w^Tx^{(i)}+b \ll 0$</li>
+</ol>
+<p>并且，很明显，只有当函数间隔$\hat{\gamma}&gt;0$时，分类结果是正确的。</p>
+<p>最后，超平面与数据集$\lbrace (x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \ldots \rbrace$之间的函数间隔，被定义为所有函数间隔中的最小值：<br>$$<br>\hat{\gamma}=\min_i\hat{\gamma}^{(i)}<br>$$</p>
+<h3 id="几何间隔（geometric-margin）"><a href="#几何间隔（geometric-margin）" class="headerlink" title="几何间隔（geometric margin）"></a>几何间隔（geometric margin）</h3><p><img src="http://jackie-image.oss-cn-hangzhou.aliyuncs.com/18-7-3/34659777.jpg" alt=""></p>
+<p>从点$(x^{(i)}, y^{(i)})$出发，对超平面做垂线，得到点D，我们知道他们之间的距离，就是该超平面到数据点$(x^{(i)}, y^{(i)})$的几何间隔。</p>
+<p>经过推导，D的坐标可以表示为：<br>$$<br>x^{(i)}-\gamma^{(i)}\frac{w}{||w||}<br>$$<br>又因为，D在超平面$w^Tx+b=0$上，所以：<br>$$<br>\begin{align}<br>&amp; w^T(x^{(i)}-\gamma^{(i)}\frac{w}{||w||})+b=0 \\<br>&amp; \Rightarrow w^Tx^{(i)}+b=\gamma^{(i)} \cdot \frac{w^Tw}{||w||}=\gamma^{(i)} \cdot ||w|| \\<br>&amp; \Rightarrow \gamma^{(i)}=(\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}<br>\end{align}<br>$$<br>加上正负分类的判断：<br>$$<br>\gamma^{(i)}=y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||})<br>$$<br>我们可以看到，几何间隔跟函数间隔之间存在如下的关系：<br>$$<br>\hat{\gamma}^{(i)} = \frac{\gamma^{(i)}}{||w||}<br>$$</p>
+<p>同样的，超平面与数据集$\lbrace (x^{(1)}, y^{(1)}), (x^{(2)}, y^{(2)}), \ldots \rbrace$之间的几何间隔，被定义为所有几何间隔中的最小值：<br>$$<br>\gamma=\min_i\gamma^{(i)}<br>$$<br>最后，我们导出<strong>最优间隔分类器</strong>（<em>Optimal Margin Classifier</em>）问题：选择$w, b$，最大化$\gamma$，同时满足$\forall(x^{(i)}, y^{(i)})$，$ y^{(i)} \cdot ((\frac{w}{||w||})^T \cdot x^{(i)}+\frac{b}{||w||}) \geq \gamma$（所有数据点的几何间隔都大于该最小几何间隔）。</p>
+<p>目前为止，已经是SVM问题的一个简化版本。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <ul class="article-meta">
+        <li>
+          <span class="label">Published Date:</span>
+          <a href="/blog-cs229/2018/07/02/10-SVM（一）概念/" class="article-date">
+  <time datetime="2018-07-02T08:27:00.000Z" itemprop="datePublished">2018-07-02</time>
+</a>
+
+        </li>
+        
+        
+          <li>
+            <span class="label">Tag:</span>
+            
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/SVM/">SVM</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/几何间隔/">几何间隔</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/函数间隔/">函数间隔</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog-cs229/tags/机器学习/">机器学习</a></li></ul>
+
+
+          </li>
+        
+        <hr/>
+      </ul>
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav" class="article-nav">
+  
+    <a href="/blog-cs229/2018/07/03/11-SVM（二）最优间隔分类器/" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          11. SVM（二）最优间隔分类器
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog-cs229/2018/06/29/09-生成学习算法的例子/" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">9. 生成学习算法的例子</div>
+    </a>
+  
+</nav>
+
+
+  
+</article>
+
+
+
+
+
+
+
+
+      </div>
+      
+    <footer id="footer" class="post-footer footer">
+      
+      <hr/>
+      <div id="footerContent" class="footer-content">
+        <p>nothing</p>
+
+
+      </div>
+    </footer>
+
+      
+
+
+
+
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+
+  <link rel="stylesheet" href="/blog-cs229/fancybox/jquery.fancybox.css">
+  <script src="/blog-cs229/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/blog-cs229/js/typing.js"></script>
+<!--[if lt IE 9]><script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.min.js"></script><![endif]-->
+
+
+
+
+
+
+
+    </div>
+  <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+</body>
+</html>
